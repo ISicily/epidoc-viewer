@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/epidoc-viewer/static/css/main.8c8b27cf.chunk.css",
+    "main.js": "/epidoc-viewer/static/js/main.e02d8a9e.chunk.js",
+    "main.js.map": "/epidoc-viewer/static/js/main.e02d8a9e.chunk.js.map",
+    "runtime-main.js": "/epidoc-viewer/static/js/runtime-main.e196e315.js",
+    "runtime-main.js.map": "/epidoc-viewer/static/js/runtime-main.e196e315.js.map",
+    "static/js/2.240140c0.chunk.js": "/epidoc-viewer/static/js/2.240140c0.chunk.js",
+    "static/js/2.240140c0.chunk.js.map": "/epidoc-viewer/static/js/2.240140c0.chunk.js.map",
+    "static/js/3.0cf6f586.chunk.js": "/epidoc-viewer/static/js/3.0cf6f586.chunk.js",
+    "static/js/3.0cf6f586.chunk.js.map": "/epidoc-viewer/static/js/3.0cf6f586.chunk.js.map",
+    "index.html": "/epidoc-viewer/index.html",
+    "static/css/main.8c8b27cf.chunk.css.map": "/epidoc-viewer/static/css/main.8c8b27cf.chunk.css.map",
+    "static/js/2.240140c0.chunk.js.LICENSE.txt": "/epidoc-viewer/static/js/2.240140c0.chunk.js.LICENSE.txt",
+    "static/media/logo.6ce24c58.svg": "/epidoc-viewer/static/media/logo.6ce24c58.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.e196e315.js",
+    "static/js/2.240140c0.chunk.js",
+    "static/css/main.8c8b27cf.chunk.css",
+    "static/js/main.e02d8a9e.chunk.js"
+  ]
+}
