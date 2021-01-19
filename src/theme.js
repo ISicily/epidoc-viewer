@@ -1,5 +1,8 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
+// https://medium.com/@weberzt/importing-a-google-font-into-your-react-app-using-material-ui-773760ded532
+const ptsans =  "'PT Sans', sans-serif";
+
 const theme = createMuiTheme({
   palette: {
     type: 'light',
@@ -20,6 +23,9 @@ const theme = createMuiTheme({
         primary: "#002147"
       }
   },
+  typography: {
+    fontFamily: ptsans
+    },
   overrides: {
     MuiPaper: {
       root: {
