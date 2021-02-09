@@ -39,6 +39,15 @@ const theme = createMuiTheme({
         margin: '15px',
       },
     },
+    MuiInputBase: {
+      root: {
+        fontSize: '14px',
+        lineHeight: '17px',
+      },
+      input: {
+        height: '0.95em',
+      }
+    },
   },
 });
 export default theme;

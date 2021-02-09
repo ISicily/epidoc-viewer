@@ -1,11 +1,13 @@
-import logo from './ox-rect.png';
+import logo from './Oxford-University-rectangle-logo.png';
 import './App.css';
-import React from 'react';
+import React, {useState} from 'react';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
-import { Button, Paper, TextField, Box, Grid } from '@material-ui/core';
-
+import { Paper, TextField, Box, Grid } from '@material-ui/core';
+import ISic000014 from './sampleData/ISic000014'
 import { makeStyles } from '@material-ui/core/styles';
+
+import LeidenView from './components/LeidenView'
 
 const useStyles = makeStyles({
   root: {
@@ -25,74 +27,47 @@ const useStyles = makeStyles({
   }
 });
 
-const testValue = `
-<div type="edition" xml:space="preserve" xml:lang="la" resp="#JP">
-  <ab>
-    <lb n="1"/>
-    D
-    <hi rend="tall">i</hi>
-    s
-    <g type="interpunct">·</g>
-    <expan>
-      <abbr>man</abbr>
-      <ex>ibus</ex>
-    </expan>
-    <lb n="2"/>
-    Zet
-    <hi rend="ligature">hi</hi>
-    <lb n="3"/>
-    vixit
-    <g type="interpunct">·</g>
-    <expan>
-      <abbr>a</abbr>
-      <ex>nnis</ex>
-    </expan>
-    <g type="interpunct">·</g>
-    <num value="6">VI</num>
-  </ab>
-</div> `
 
 function App() {
+  const [tei, setTei] = useState(ISic000014)
   const classes = useStyles();
+
   return (
     <Container maxWidth="lg" className="App">
-       <Box m={2}><img src={logo} alt="logo" /></Box>
+       <Box m={2}><img src={logo} alt="logo" height={100}/></Box>
         <Typography variant="h4" component="h1" gutterBottom>
           I.Sicily EpiDoc Viewer
         </Typography>
 
-      <Grid container>
-        <Grid item xs={6} spacing={3}>
+      <Grid container spacing={3}>
+        <Grid item xs={6} >
           <Paper>
+          <Box height={'32em'}>
+            <h4>Epidoc</h4>
             <TextField
               placeholder={`Paste your text division here`}
               multiline
               rows={20}
               rowsMax={20}
               fullWidth
-              helperText="Epidoc"
+              //helperText="Epidoc"
+              value={tei}
+              onChange={e => setTei(e.target.value)}
             />
+            </Box>
           </Paper>
         </Grid>
-        <Grid item xs={6} spacing={3}>
+        <Grid item xs={6} >
           <Paper>
-            <TextField
-              placeholder={`The rendered Leiden will appear here`}
-              multiline
-              rows={20}
-              rowsMax={20}
-              fullWidth
-              helperText="Leiden"
-            />
+            <Box height={'32em'}>
+            <h4>Leiden</h4>
+            <LeidenView tei={tei}/>
+            
+          </Box>
           </Paper>
         </Grid>
       </Grid>
-      <Button variant="contained" color="primary" className={classes.button}>
-          Refresh
-        </Button>
-        <Button variant="contained" color="primary" className={classes.button}>
-          Clear
-        </Button>
+
     </Container>
   );
 }
