@@ -4,7 +4,7 @@ import React, {useState} from 'react';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { Paper, TextField, Box, Grid } from '@material-ui/core';
-import ISic000014 from './sampleData/ISic000014'
+import ISic000002 from './sampleData/ISic000002'
 import { makeStyles } from '@material-ui/core/styles';
 
 import LeidenView from './components/LeidenView'
@@ -29,7 +29,7 @@ const useStyles = makeStyles({
 
 
 function App() {
-  const [tei, setTei] = useState(ISic000014)
+  const [tei, setTei] = useState(ISic000002)
   const classes = useStyles();
 
   return (
@@ -50,7 +50,6 @@ function App() {
               rows={20}
               rowsMax={20}
               fullWidth
-              //helperText="Epidoc"
               value={tei}
               onChange={e => setTei(e.target.value)}
             />
@@ -62,7 +61,6 @@ function App() {
             <Box height={'32em'} >
             <h4>Leiden</h4>
             <LeidenView tei={tei}/>
-            
           </Box>
           </Paper>
         </Grid>

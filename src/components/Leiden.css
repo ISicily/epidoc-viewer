@@ -13,10 +13,6 @@
   
   .leiden-transcription note:after { 
      
-   /* content: url('../images/glyphicons-152-new-window.png'); */
-     /*glyphicon-share-alt; */
-   /*  background-color: rgba(0,255,0,0.3); */
-    
     visibility: visible;
   
     counter-increment: footnotecounter; /* Add 1 to footnote */
@@ -26,19 +22,6 @@
     vertical-align: super; /* sets the footnote above the baseline */
   }
   
-  /* add a line break after lb */
-  .epidoc-transcription lb, .leiden-transcription lb {
-      display:inline;
-  }
-  .epidoc-transcription lb:not(:first-child):before, .leiden-transcription lb:not(:first-child):before {
-      content:"\a";
-      white-space: pre;
-  }
-  /* add line numbers */
-  .epidoc-transcription, lb:after {
-      content: attr(n) '. ';
-      width: 2em; 
-      display: block; 
-      float: left; 
-      margin-left: 1em; 
+  .leiden-numbering  {
+    margin-right: 1em; 
   }

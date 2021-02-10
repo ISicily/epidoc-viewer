@@ -53,7 +53,28 @@ const options = {
                 node.textContent = `(vac.${node.getAttribute('extent')})`;
                 return node
             }
-        },{
+        },
+        {
+            condition: (node) => node.nodeName.toLowerCase() === 'lb',
+            pre: (node) => {
+                const breakAttr = node.getAttribute('break');
+                const n = node.getAttribute('n')
+                const span = document.createElement('span')
+                const lineNumSpan = document.createElement('span')
+                const lineNumber = document.createTextNode(`${n}.    `);
+                lineNumSpan.appendChild(lineNumber)
+                const br = document.createElement('br');
+                if (breakAttr === 'no') {
+                    const dashNode = document.createTextNode('-');
+                    span.appendChild(dashNode)
+                } 
+                if (n > 1) span.appendChild(br)
+                span.appendChild(lineNumSpan)
+                span.className += ' leiden-numbering';
+                return span
+            }
+        },
+        {
             condition: (node) => node.nodeName.toLowerCase() === 'gap',
             pre: (node, key) => {
                 let elementText;
