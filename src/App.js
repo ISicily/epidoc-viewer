@@ -59,7 +59,7 @@ function App() {
         </Grid>
         <Grid item xs={6} >
           <Paper>
-            <Box height={'32em'}>
+            <Box height={'32em'} >
             <h4>Leiden</h4>
             <LeidenView tei={tei}/>
             

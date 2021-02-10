@@ -81,7 +81,7 @@ const options = {
 }
 
 const LeidenView = ({tei}) => (
-  <Box m={4}>
+  <Box m={4} textAlign="left">
     {convert(tei, options)}
   </Box>
 );
