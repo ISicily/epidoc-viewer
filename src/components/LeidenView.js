@@ -101,10 +101,12 @@ const options = {
     selector: 'div[type="edition"] > *'
 }
 
-const LeidenView = ({tei}) => (
-  <Box m={4} textAlign="left">
-    {convert(tei, options)}
-  </Box>
-);
+const LeidenView = ({tei}) => { 
+    const fixedTEI = tei.replace(/[\r\n\t]/g, "")
+    return (
+        <Box m={4} textAlign="left">
+            {convert(fixedTEI, options)}
+        </Box>
+)};
 
 export default LeidenView
