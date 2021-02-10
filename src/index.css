@@ -11,3 +11,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@font-face {
+  font-family: "NewAthena";
+  src: local("NewAthena"),
+    url("./fonts/NAU5_007woff/newathu5_7.woff") format("woff");
+  font-weight: normal;
+}

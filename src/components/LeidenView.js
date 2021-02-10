@@ -97,15 +97,21 @@ const options = {
             }
         }
     ],
-    type: 'application/xml',
-    selector: 'div[type="edition"] > *'
+  //  type: 'application/xml',
+   // selector: 'div[type="edition"] > *'
 }
 
 const LeidenView = ({tei}) => { 
     const fixedTEI = tei.replace(/[\r\n\t]/g, "")
+    const parser = new DOMParser();
+    console.log(parser)
+   // parser.preserveWhitespace=true;
+    const doc = parser.parseFromString(fixedTEI, "application/xml");
+    const node = doc.querySelector('div[type="edition"] > *');
+
     return (
         <Box m={4} textAlign="left">
-            {convert(fixedTEI, options)}
+            {convert(node, options)}
         </Box>
 )};
 

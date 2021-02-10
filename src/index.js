@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './fonts/NAU5_007woff/newathu5_7.woff'; 
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
