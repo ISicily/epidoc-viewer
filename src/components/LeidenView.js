@@ -33,7 +33,7 @@ const options = {
         {
             condition: (node) => node.nodeName.toLowerCase() === 'unclear',
             pre: (node, key) => {
-                node.textContent = node.textContent.split('').map(character => character + '\u0323').join().trim();
+                node.textContent = node.textContent.split('').map(character => character + '\u0323').join('').trim();
                 return node
             }
         },

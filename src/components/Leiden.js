@@ -1,4 +1,3 @@
-
 import './Leiden.css';
 
 function convertToLeiden(xmlString, isDiplomatic) {
