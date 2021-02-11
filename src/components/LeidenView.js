@@ -54,6 +54,20 @@ const options = {
                 return node
             }
         },
+        
+        {
+            condition: (node) => (node.nodeName.toLowerCase() === 'placename' || node.nodeName.toLowerCase() === 'persname'),
+            pre: (node, key) => {
+                const a = document.createElement('a')
+                const href = document.createAttribute('href')
+                href.value = node.getAttribute('ref');
+                a.setAttributeNode(href);
+                [...node.childNodes].forEach(child => {
+                    a.appendChild(child);
+                  });
+                return a
+            }
+        },
         {
             condition: (node) => node.nodeName.toLowerCase() === 'lb',
             pre: (node) => {
