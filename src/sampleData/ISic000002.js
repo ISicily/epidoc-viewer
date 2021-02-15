@@ -1,4 +1,4 @@
-const ISic000002 = `<?xml-model href="http://www.stoa.org/epidoc/schema/latest/tei-epidoc.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?><?xml-model href="../schematron/ircyr-checking.sch" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+const ISic000002a = `<?xml-model href="http://www.stoa.org/epidoc/schema/latest/tei-epidoc.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?><?xml-model href="../schematron/ircyr-checking.sch" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="en">
     <teiHeader>
         <fileDesc>
@@ -256,5 +256,73 @@ const ISic000002 = `<?xml-model href="http://www.stoa.org/epidoc/schema/latest/t
         </body>
     </text>
 </TEI>`
+
+const ISic000002 = `
+            <div type="edition" xml:space="preserve" xml:lang="la" resp="#JP">
+                <ab>
+                    <lb n="1"/>
+                    <expan> 
+                        <abbr> d 
+                            <supplied reason="lost">es</supplied> 
+                        </abbr> 
+                        <supplied reason="lost"> 
+							<ex>ignatus</ex> 
+                        </supplied> 
+                    </expan>
+                    <lb n="2"/>
+                    <supplied reason="lost">
+                    <expan>
+                        <abbr>q</abbr>
+                        <ex>uaestor</ex>
+                    </expan>
+                    </supplied>
+                    <supplied reason="lost">
+                        <expan>
+                            <abbr>pr</abbr>
+                            <ex>o</ex>
+                        </expan> 
+                    </supplied>
+                    <lb n="3"/>
+                    <expan>
+                        <abbr>D</abbr>
+                        <ex>is</ex>
+                    </expan>
+                    <g type="interpunct">·</g>
+                    <expan>
+                        <abbr>M</abbr>
+                        <ex>anibus</ex>
+                    </expan>
+                    <g type="interpunct">·</g>
+                    <expan>
+                        <abbr>s</abbr>
+                        <ex>acrum</ex>
+                    </expan>
+                    <lb n="4"/>
+                    <persName>
+                        <name>Lurius</name>
+                        <g type="interpunct">·</g>
+                        <name>Zosimus</name>
+                    </persName>
+                    <lb n="5"/>
+                    <expan>
+                        <abbr>vix</abbr>
+                        <ex>it</ex>
+                    </expan>
+                    <g type="interpunct">·</g> annis <g type="interpunct">·</g>
+                    <num value="7">VII</num>
+                    <lb n="6"/>
+                    <persName>
+                        <name>Luria</name> 
+						 <g type="interpunct">·</g>
+                        <name>
+                            <expan>
+                                <abbr>Melanth</abbr>
+                                <ex>e</ex>
+                            </expan>
+                        </name>
+                    </persName> i
+					<lb n="7" break="no"/>n <g type="interpunct">·</g> suo <g type="interpunct">·</g> filio <g type="interpunct">·</g> fecit
+                </ab>
+            </div>`
 
 export default ISic000002

@@ -2,30 +2,13 @@
     vertical-align: super;
   }
   
-  .leiden-transcription note { 
-    visibility: hidden;
-  }
-  
-  .leiden-transcription { 
-    counter-reset: footnotecounter;
-    line-height: 1.5; 
-  }
-  
-  .leiden-transcription note:after { 
-     
-    visibility: visible;
-  
-    counter-increment: footnotecounter; /* Add 1 to footnote */
-    content: counter(footnotecounter);
-    font-size: smaller; 
-    margin-left: .1em;
-    vertical-align: super; /* sets the footnote above the baseline */
-  }
-  
   .leiden-numbering  {
     margin-right: 1em; 
   }
 
   .leiden-transcription {
-    font-family: NewAthena
+    font-family: NewAthena;
   }
+
+.single-space-holder::after { content: '\0020'; }
+
