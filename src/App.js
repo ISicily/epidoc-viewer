@@ -1,13 +1,13 @@
 import logo from './Oxford-University-rectangle-logo.png';
 import './App.css';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { Paper, TextField, Box, Grid } from '@material-ui/core';
-import ISic000002 from './sampleData/ISic000002'
+import sampleTEI from './sampleData/sampleTEI'
 import { makeStyles } from '@material-ui/core/styles';
 
-import LeidenView from './components/LeidenView'
+import LeidenViewer from './components/LeidenViewer'
 
 const useStyles = makeStyles({
   root: {
@@ -29,7 +29,15 @@ const useStyles = makeStyles({
 
 
 function App() {
-  const [tei, setTei] = useState(ISic000002)
+
+  const [tei, setTei] = useState()
+
+  useEffect(() => {
+    fetch('https://raw.githubusercontent.com/ISicily/ISicily/master/alists/ISic-all-example.xml')
+      .then(res => res.text())
+      .then (res => setTei(res))
+  }, []);
+
   const classes = useStyles();
 
   return (
@@ -60,7 +68,7 @@ function App() {
           <Paper>
             <Box height={'32em'} >
             <h4>Leiden</h4>
-            <LeidenView tei={tei}/>
+            <LeidenViewer tei={tei}/>
           </Box>
           </Paper>
         </Grid>

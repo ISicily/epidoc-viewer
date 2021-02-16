@@ -10,5 +10,10 @@
     font-family: NewAthena;
   }
 
+  .leiden-div {
+    display:inline-block;
+    margin-bottom: 1em;
+  }
+
 .single-space-holder::after { content: '\0020'; }
 

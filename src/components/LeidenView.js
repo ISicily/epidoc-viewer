@@ -208,4 +208,9 @@ const LeidenView = ({tei}) => {
         </Box>
 )};
 
+/*
+run through tree walker.  as we hit a node, check for matching rule.  If match, apply rule.
+If no match, do nothing.
+For textNodes that have no text, but at least one space, replace with a span with single-space-holder style.
+*/
 export default LeidenView
