@@ -7,6 +7,12 @@ const getDescendants = (node, accum) => {
     return accum
 }
 
+const addSingleSpaceSpan = (node) => {
+    const whitespaceElem = document.createElement('span')
+    whitespaceElem.className += ' single-space-holder';
+    node.appendChild(whitespaceElem)
+}
+
 const mergeAdjacentSupplied = (node, tw) => {
     const descendants = getDescendants( node );
    // tw.currentNode = node
@@ -19,9 +25,7 @@ const mergeAdjacentSupplied = (node, tw) => {
             // text node with just whitespace
             // So, we add another element to keep the one space,
             // and then apply CSS to it later to keep the space character
-            const whitespaceElem = document.createElement('span')
-            whitespaceElem.className += ' single-space-holder';
-            node.appendChild(whitespaceElem)
+            addSingleSpaceSpan(currentNode)
             currentNode = tw.nextNode();
         } else if (currentNode.nodeType === Node.TEXT_NODE && currentNode.nodeValue.trim().length) {
             // if text node and not empty then we are done

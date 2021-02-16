@@ -50,13 +50,14 @@ function App() {
       <Grid container spacing={3}>
         <Grid item xs={6} >
           <Paper>
+          <h4>Epidoc</h4>
           <Box height={'32em'}>
-            <h4>Epidoc</h4>
+            
             <TextField
               placeholder={`Paste your text division here`}
               multiline
-              rows={20}
-              rowsMax={20}
+              rows={26}
+              rowsMax={26}
               fullWidth
               value={tei}
               onChange={e => setTei(e.target.value)}
@@ -65,9 +66,10 @@ function App() {
           </Paper>
         </Grid>
         <Grid item xs={6} >
-          <Paper>
-            <Box height={'32em'} >
-            <h4>Leiden</h4>
+          <Paper >
+          <h4>Leiden</h4>
+            <Box height={'32em'} overflow="auto" >
+            
             <LeidenViewer tei={tei}/>
           </Box>
           </Paper>
