@@ -69,7 +69,15 @@ const rules = {
     'div': node => {
         const type = node.getAttribute('type')
         const subtype = node.getAttribute('subtype')
+        const n = node.getAttribute('n')
         node.className += ' leiden-div'
+        if (type === 'textpart' && subtype === 'section') {
+            const title = document.createElement('h5')
+            title.append(`${subtype} ${n}`)
+           // const typeText = document.createTextNode(`${subtype} ${n}`);
+           // title.append(typeText)
+            node.prepend(title)
+        }
     },
     'ab': node => {node.className += ' leiden-transcription'},
     'ex': node => {node.prepend('('); node.append(')')},
