@@ -72,10 +72,9 @@ const rules = {
         const n = node.getAttribute('n')
         node.className += ' leiden-div'
         if (type === 'textpart' && subtype === 'section') {
-            const title = document.createElement('h5')
+            const title = document.createElement('span')
+            title.className += ' section-heading';
             title.append(`${subtype} ${n}`)
-           // const typeText = document.createTextNode(`${subtype} ${n}`);
-           // title.append(typeText)
             node.prepend(title)
         }
     },
@@ -106,18 +105,14 @@ const rules = {
     'lb': node => {
             const breakAttr = node.getAttribute('break');
             const n = node.getAttribute('n')
-            //const span = document.createElement('span')
-            const lineNumSpan = document.createElement('span')
-            const lineNumber = document.createTextNode(`${n}.    `);
-            lineNumSpan.appendChild(lineNumber)
-            const br = document.createElement('br');
-            if (breakAttr === 'no') {
-                const dashNode = document.createTextNode('-');
-                node.appendChild(dashNode)
-            } 
-            if (n > 1) node.appendChild(br)
-            node.appendChild(lineNumSpan)
+            if (breakAttr === 'no') node.append('-');
+            if (n !== 1) node.append(document.createElement('br'));
+            node.append(`${n}.    `)
             node.className += ' leiden-numbering';
+    },
+    'cb': node => {
+        node.append(`Col. ${node.getAttribute('n')}`)
+        node.className += ' section-heading';
     },
     'gap': node => {
             let elementText;
