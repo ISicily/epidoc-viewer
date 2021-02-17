@@ -105,29 +105,85 @@ const rules = {
     'lb': node => {
             const breakAttr = node.getAttribute('break');
             const n = node.getAttribute('n')
+            const style = node.getAttribute('style')
+            let textIndicator = ' '
+            if (style === "text-direction:r-to-l") {
+                textIndicator = '←'
+            } else if (style === "text-direction:l-to-r") {
+                textIndicator = '→'
+            } else if (style === "text-direction:spiral-clockwise") {
+                textIndicator = '↻'
+            } else if (style === "text-direction:spiral-anticlockwise") {
+                textIndicator = '↺'
+            } else if (style === "text-direction:upwards") {
+                textIndicator = '↑'
+            } else if (style === "text-direction:downwards") {
+                textIndicator = '↓'
+            } 
             if (breakAttr === 'no') node.append('-');
             if (n !== 1) node.append(document.createElement('br'));
-            node.append(`${n}.    `)
+            const numSpan = document.createElement('span')
+            numSpan.className += ' leiden-num-span'
+            numSpan.append(`${n}. ${textIndicator}`)
+            node.append(numSpan)
             node.className += ' leiden-numbering';
     },
     'cb': node => {
         node.append(`Col. ${node.getAttribute('n')}`)
         node.className += ' section-heading';
     },
+    'milestone': node => {
+       // const unit = node.getAttribute('unit');
+        const n = node.getAttribute('n')
+        const hi = document.createElement('hi')
+        hi.setAttribute('rend', 'superscript')
+        node.append('|')
+        hi.append(`${n}`)
+        node.append(hi)
+    },
     'gap': node => {
             let elementText;
-            const reason = node.getAttribute('reason');
-            const extent = node.getAttribute('extent');
+            const reason = node.getAttribute('reason');  // 'lost' 'illegible' 'omitted'
+            const extent = node.getAttribute('extent');  // always 'unknown' if present?  - not in combination with quantity or atLeast/atMost
+            const quantity = node.getAttribute('quantity'); // not in combination with extent or atLeast/atMost
+            const unit = node.getAttribute('unit');  // character or line.  if line then:  (Traces of 3-5 lines)
+            const atLeast = node.getAttribute('atLeast');  // not in combination with extent or quantity
+            const atMost = node.getAttribute('atMost');     // not in combination with extent or quantity
+            const precision = node.getAttribute('precision');  // 'low' output: ca. 
+            const precisionOutput = precision && precision === 'low' ? 'ca.' : '' 
+            const isLine = unit && unit === 'line';
             if (reason === 'lost') {
                 elementText = '[';
                 if (extent === 'unknown') {
-                    elementText += '---';
-                } else {
-                    elementText += '.'.repeat(extent);
+                    elementText += '- - ? - -';
+                } else if (atLeast || atMost) {
+                    elementText += `-${atLeast}-${atMost}-`
+                } else if (quantity && quantity < 5) {
+                    elementText += '. '.repeat(quantity);
+                } else if (quantity && quantity >= 5) {
+                    // QEUSTION:  SHOULD THE PRECISION OUTPUT BE ELSEWHERE TOO?
+                    if (precision === 'low') {
+                        elementText += `- - ${precisionOutput}${quantity} - - `
+                    } else {
+                        elementText += `. . ${quantity} . . `
+                    }
+                    
                 }
                 elementText += ']';
             } else if (reason === 'illegible') {
-                elementText = '+'.repeat(extent);
+                const beforeText = isLine ? '(Traces of ' : '..'
+                const afterText = isLine ? ' lines)' : '..'
+                if (extent === 'unknown') {
+                    elementText = `${beforeText}?${afterText}`
+                } else if (atLeast || atMost) {
+                    elementText = `${beforeText}${atLeast}-${atMost}${afterText}`
+                } else if (quantity && quantity < 5) {
+                    elementText = '.'.repeat(quantity);
+                } else if (quantity && quantity >= 5) {
+                    elementText = `${beforeText}${precisionOutput}${quantity}${afterText}`
+                }
+            } else if (reason === 'omitted') {
+                elementText = '<- - ? - ->';
             }
             node.textContent = elementText;
     }

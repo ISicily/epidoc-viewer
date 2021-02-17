@@ -6,6 +6,11 @@
     margin-right: 1em; 
   }
 
+  .leiden-num-span  {
+      float: left;
+      width: 40px;
+  }
+
   .leiden-transcription {
     font-family: NewAthena;
   }
