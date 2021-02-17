@@ -80,14 +80,15 @@ const rules = {
     },
     'ab': node => {node.className += ' leiden-transcription'},
     'ex': node => {node.prepend('('); node.append(')')},
-    'space': node => {node.textContent = `(vac.${node.getAttribute('extent')})`},
+    'space': node => {node.textContent = `(vac.${node.getAttribute('quantity')})`},
     'g': appendSpaceToNode,
     'name': appendSpaceToNode,
-    'num': appendSpaceToNode,
+  //  'num': appendSpaceToNode,
     'placename': hyperlinkNode,
     'persname': hyperlinkNode,
     'supplied': (node, tw) => {
-        // the node is empty so do nothing
+        // if the node is empty then do nothing, 
+        // likely a 'supplied' that we merged into the prior 'supplied'
         if (node.textContent.trim() === '') return null
         mergeAdjacentSupplied(node, tw)
         node.prepend('[')
@@ -159,26 +160,25 @@ const rules = {
                 } else if (atLeast || atMost) {
                     elementText += `-${atLeast}-${atMost}-`
                 } else if (quantity && quantity < 5) {
-                    elementText += '. '.repeat(quantity);
+                    elementText += '. '.repeat(quantity).trim();
                 } else if (quantity && quantity >= 5) {
                     // QEUSTION:  SHOULD THE PRECISION OUTPUT BE ELSEWHERE TOO?
                     if (precision === 'low') {
                         elementText += `- - ${precisionOutput}${quantity} - - `
                     } else {
                         elementText += `. . ${quantity} . . `
-                    }
-                    
+                    } 
                 }
                 elementText += ']';
             } else if (reason === 'illegible') {
-                const beforeText = isLine ? '(Traces of ' : '..'
-                const afterText = isLine ? ' lines)' : '..'
+                const beforeText = isLine ? '(Traces of ' : '. .'
+                const afterText = isLine ? ' lines)' : '. .'
                 if (extent === 'unknown') {
                     elementText = `${beforeText}?${afterText}`
                 } else if (atLeast || atMost) {
                     elementText = `${beforeText}${atLeast}-${atMost}${afterText}`
                 } else if (quantity && quantity < 5) {
-                    elementText = '.'.repeat(quantity);
+                    elementText = '.'.repeat(quantity).trim();
                 } else if (quantity && quantity >= 5) {
                     elementText = `${beforeText}${precisionOutput}${quantity}${afterText}`
                 }
