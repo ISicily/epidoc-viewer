@@ -60,10 +60,17 @@ const hyperlinkNode = node => {
     }
 }
 
+const makePopupable = (subNode, node, title, openPopup) => {
+    node.addEventListener("click", ()=>openPopup(title, subNode.textContent))
+    node.className += ' popupable'
+    subNode.parentNode.removeChild(subNode)
+}
+
 const appendSpaceToNode = (node, tw) => {
     /****  IMPORTANT: textContent removes all children and sets text of this node to a concatentation of children's text */
     node.textContent = node.textContent + ' ';
 }
+
 
 const rules = {
     'div': node => {
@@ -88,7 +95,7 @@ const rules = {
     'persname': hyperlinkNode,
     'supplied': (node, tw) => {
         // if the node is empty then do nothing, 
-        // likely a 'supplied' that we merged into the prior 'supplied'
+        // it is likely a 'supplied' that we merged into the prior 'supplied'
         if (node.textContent.trim() === '') return null
         mergeAdjacentSupplied(node, tw)
         node.prepend('[')
@@ -132,6 +139,15 @@ const rules = {
     'cb': node => {
         node.append(`Col. ${node.getAttribute('n')}`)
         node.className += ' section-heading';
+    },
+    'choice': (node, tw, openPopup ) => {
+        const reg = node.querySelector('reg')
+        const corr = node.querySelector('corr')
+        if (reg) {
+            makePopupable(reg, node, 'reg', openPopup)
+        } else if (corr) {
+            makePopupable(corr, node, 'Correction', openPopup)
+        }
     },
     'milestone': node => {
        // const unit = node.getAttribute('unit');
