@@ -87,7 +87,26 @@ const rules = {
     },
     'ab': node => {node.className += ' leiden-transcription'},
     'ex': node => {node.prepend('('); node.append(')')},
-    'space': node => {node.textContent = `(vac.${node.getAttribute('quantity')})`},
+    'space': node => {
+        const extent = node.getAttribute('extent');  
+        const unit = node.getAttribute('unit');  // character or line
+        const isUncertain = node.getAttribute('cert') === 'low'
+        const quantity = node.getAttribute('quantity'); 
+        let textContent = '('
+        if (unit === 'line') {
+            textContent += 'vacat'
+        } else {
+            if (quantity || (extent === 'unknown' && isUncertain)) {
+                textContent += 'vac.'
+                if (quantity > 1) textContent += quantity
+                if (isUncertain) textContent += '?'   
+            } else if (extent === 'unknown') {
+                textContent += 'vacat'
+            } 
+        }
+        textContent += ')'
+        node.textContent = textContent
+    },
     'g': appendSpaceToNode,
     'name': appendSpaceToNode,
   //  'num': appendSpaceToNode,
@@ -161,40 +180,48 @@ const rules = {
     'gap': node => {
             let elementText;
             const reason = node.getAttribute('reason');  // 'lost' 'illegible' 'omitted'
-            const extent = node.getAttribute('extent');  // always 'unknown' if present?  - not in combination with quantity or atLeast/atMost
+            const extent = node.getAttribute('extent');  // always 'unknown' if present?  - never in combination with quantity or atLeast/atMost
             const quantity = node.getAttribute('quantity'); // not in combination with extent or atLeast/atMost
-            const unit = node.getAttribute('unit');  // character or line.  if line then:  (Traces of 3-5 lines)
+            const unit = node.getAttribute('unit');  // character or line
             const atLeast = node.getAttribute('atLeast');  // not in combination with extent or quantity
             const atMost = node.getAttribute('atMost');     // not in combination with extent or quantity
             const precision = node.getAttribute('precision');  // 'low' output: ca. 
             const precisionOutput = precision && precision === 'low' ? 'ca.' : '' 
             const isLine = unit && unit === 'line';
             if (reason === 'lost') {
-                elementText = '[';
-                if (extent === 'unknown') {
-                    elementText += '- - ? - -';
-                } else if (atLeast || atMost) {
-                    elementText += `-${atLeast}-${atMost}-`
-                } else if (quantity && quantity < 5) {
-                    elementText += '. '.repeat(quantity).trim();
-                } else if (quantity && quantity >= 5) {
-                    // QEUSTION:  SHOULD THE PRECISION OUTPUT BE ELSEWHERE TOO?
-                    if (precision === 'low') {
-                        elementText += `- - ${precisionOutput}${quantity} - - `
-                    } else {
-                        elementText += `. . ${quantity} . . `
-                    } 
+                if (isLine) {
+                    elementText = (extent==='unknown') ?
+                        ' - - - - - ' :
+                        '  [- - - - - -]  ' ; 
+                } else {
+                    elementText = '[';
+                    if (extent === 'unknown') {
+                        elementText += '- - ? - -';
+                    } else if (atLeast || atMost) {
+                        elementText += ` - ${atLeast}-${atMost} - `
+                    } else if (quantity && quantity < 5) {
+                        elementText += '. '.repeat(quantity).trim();
+                    } else if (quantity && quantity >= 5) {
+                        // QEUSTION:  SHOULD THE PRECISION OUTPUT BE ELSEWHERE TOO?
+                        if (precision === 'low') {
+                            elementText += `- - ${precisionOutput}${quantity} - - `
+                        } else {
+                            elementText += `. . ${quantity} . . `
+                        } 
+                    }
+                    elementText += ']';
                 }
-                elementText += ']';
             } else if (reason === 'illegible') {
-                const beforeText = isLine ? '(Traces of ' : '. .'
-                const afterText = isLine ? ' lines)' : '. .'
+                const beforeText = isLine ? '(Traces of ' : '. . '
+                const afterText = isLine ? ' lines)' : ' . .'
                 if (extent === 'unknown') {
-                    elementText = `${beforeText}?${afterText}`
+                    elementText = isLine ?
+                    `${beforeText.trim()}${afterText}` :
+                    `${beforeText}?${afterText}`
                 } else if (atLeast || atMost) {
                     elementText = `${beforeText}${atLeast}-${atMost}${afterText}`
                 } else if (quantity && quantity < 5) {
-                    elementText = '.'.repeat(quantity).trim();
+                    elementText = '. '.repeat(quantity).trim();
                 } else if (quantity && quantity >= 5) {
                     elementText = `${beforeText}${precisionOutput}${quantity}${afterText}`
                 }
