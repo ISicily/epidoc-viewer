@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/epidoc-viewer/static/css/main.94384674.chunk.css",
-    "main.js": "/epidoc-viewer/static/js/main.fad9cd61.chunk.js",
-    "main.js.map": "/epidoc-viewer/static/js/main.fad9cd61.chunk.js.map",
+    "main.css": "/epidoc-viewer/static/css/main.1fe3eb0c.chunk.css",
+    "main.js": "/epidoc-viewer/static/js/main.010e21a6.chunk.js",
+    "main.js.map": "/epidoc-viewer/static/js/main.010e21a6.chunk.js.map",
     "runtime-main.js": "/epidoc-viewer/static/js/runtime-main.66c34820.js",
     "runtime-main.js.map": "/epidoc-viewer/static/js/runtime-main.66c34820.js.map",
     "static/js/2.ad9a0155.chunk.js": "/epidoc-viewer/static/js/2.ad9a0155.chunk.js",
@@ -10,14 +10,14 @@
     "static/js/3.bda83937.chunk.js": "/epidoc-viewer/static/js/3.bda83937.chunk.js",
     "static/js/3.bda83937.chunk.js.map": "/epidoc-viewer/static/js/3.bda83937.chunk.js.map",
     "index.html": "/epidoc-viewer/index.html",
-    "static/css/main.94384674.chunk.css.map": "/epidoc-viewer/static/css/main.94384674.chunk.css.map",
+    "static/css/main.1fe3eb0c.chunk.css.map": "/epidoc-viewer/static/css/main.1fe3eb0c.chunk.css.map",
     "static/js/2.ad9a0155.chunk.js.LICENSE.txt": "/epidoc-viewer/static/js/2.ad9a0155.chunk.js.LICENSE.txt",
     "static/media/index.css": "/epidoc-viewer/static/media/newathu5_7.60c94226.woff"
   },
   "entrypoints": [
     "static/js/runtime-main.66c34820.js",
     "static/js/2.ad9a0155.chunk.js",
-    "static/css/main.94384674.chunk.css",
-    "static/js/main.fad9cd61.chunk.js"
+    "static/css/main.1fe3eb0c.chunk.css",
+    "static/js/main.010e21a6.chunk.js"
   ]
 }
