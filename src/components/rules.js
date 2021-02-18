@@ -85,6 +85,15 @@ const rules = {
             node.prepend(title)
         }
     },
+    'cb': node => {
+        const title = document.createElement('span')
+            title.className += ' section-heading';
+            title.append(`Col. ${node.getAttribute('n')}`)
+            node.prepend(title)
+
+       // node.append(`Col. ${node.getAttribute('n')}`)
+       // node.className += ' section-heading';
+    }, 
     'ab': node => {node.className += ' leiden-transcription'},
     'ex': node => {node.prepend('('); node.append(')')},
     'space': node => {
@@ -121,9 +130,15 @@ const rules = {
             node.textContent = node.textContent.split('').map(character => character + '\u0323').join('').trim();
     },
     'hi': node => {
-            if (node.getAttribute('rend') === 'ligature') {
+        const rend = node.getAttribute('rend');
+            if ( rend === 'ligature') {
                 const oldText = node.textContent;
                 node.textContent = oldText.charAt(0) + '\u0302' + oldText.substring(1);
+            } else if (rend==="superscript") {
+                const sup = document.createElement('sup')
+                sup.textContent = node.textContent
+                node.textContent = ''
+                node.appendChild(sup)
             }
     },
     'lb': node => {
@@ -152,10 +167,6 @@ const rules = {
             node.append(numSpan)
             node.className += ' leiden-numbering';
     },
-    'cb': node => {
-        node.append(`Col. ${node.getAttribute('n')}`)
-        node.className += ' section-heading';
-    },
     'choice': (node, tw, openPopup ) => {
         const reg = node.querySelector('reg')
         const corr = node.querySelector('corr')
@@ -166,13 +177,10 @@ const rules = {
         }
     },
     'milestone': node => {
-       // const unit = node.getAttribute('unit');
-        const n = node.getAttribute('n')
-        const hi = document.createElement('hi')
-        hi.setAttribute('rend', 'superscript')
+        const sup = document.createElement('sup')
+        sup.textContent = `${node.getAttribute('n')}`
         node.append('|')
-        hi.append(`${n}`)
-        node.append(hi)
+        node.append(sup)
     },
     'gap': node => {
             let elementText;
