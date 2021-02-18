@@ -61,9 +61,13 @@ const hyperlinkNode = node => {
 }
 
 const makePopupable = (subNode, node, title, openPopup) => {
-    node.addEventListener("click", ()=>openPopup(title, subNode.textContent))
-    node.className += ' popupable'
-    subNode.parentNode.removeChild(subNode)
+    const span = document.createElement('span')
+    span.className += ' popupable'
+    span.addEventListener("click", ()=>openPopup(title, subNode.textContent))
+    subNode.parentNode.removeChild(subNode);
+    // copy the nodes children to the new span
+    [...node.childNodes].forEach(child => span.appendChild(child));
+    node.appendChild(span)
 }
 
 const appendSpaceToNode = (node, tw) => {
@@ -77,7 +81,6 @@ const rules = {
         const type = node.getAttribute('type')
         const subtype = node.getAttribute('subtype')
         const n = node.getAttribute('n')
-        node.className += ' leiden-div'
         if (type === 'textpart' && subtype === 'section') {
             const title = document.createElement('span')
             title.className += ' section-heading';
@@ -90,12 +93,36 @@ const rules = {
             title.className += ' section-heading';
             title.append(`Col. ${node.getAttribute('n')}`)
             node.prepend(title)
-
-       // node.append(`Col. ${node.getAttribute('n')}`)
-       // node.className += ' section-heading';
     }, 
-    'ab': node => {node.className += ' leiden-transcription'},
+    'ab': node => {
+        const span = document.createElement('span')
+        span.className += ' leiden-transcription';
+        [...node.childNodes].forEach(child => span.appendChild(child));
+        node.appendChild(span)
+    },
     'ex': node => {node.prepend('('); node.append(')')},
+    'del': (node) => {
+        const rend = node.getAttribute('rend');
+        if (rend ==="erasure") {
+            node.prepend('⟦'); node.append('⟧')
+        } 
+    },
+    'subst': (node, tw, openPopup ) => {
+        const del = node.querySelector('del')
+         if (del) {
+             const rend = del.getAttribute('rend')
+             if (rend === 'corrected') {
+                makePopupable(del, node, 'del', openPopup)
+             }
+        }
+    },
+    'add': node => {
+        const place = node.getAttribute('place');
+        if (place === 'overstrike') {
+            node.prepend('«')
+            node.append('»')
+        }
+    },
     'space': node => {
         const extent = node.getAttribute('extent');  
         const unit = node.getAttribute('unit');  // character or line
@@ -117,7 +144,7 @@ const rules = {
         node.textContent = textContent
     },
     'g': appendSpaceToNode,
-    'name': appendSpaceToNode,
+   // 'name': appendSpaceToNode,
   //  'num': appendSpaceToNode,
     'placename': hyperlinkNode,
     'persname': hyperlinkNode,
@@ -165,7 +192,6 @@ const rules = {
             numSpan.className += ' leiden-num-span'
             numSpan.append(`${n}. ${textIndicator}`)
             node.append(numSpan)
-            node.className += ' leiden-numbering';
     },
     'choice': (node, tw, openPopup ) => {
         const reg = node.querySelector('reg')

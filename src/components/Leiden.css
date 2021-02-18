@@ -1,33 +1,22 @@
-  .leiden-numbering  {
-    margin-right: 1em; 
-  }
+.leiden-num-span  {
+  float: left;
+  width: 40px;
+}
 
-  .leiden-num-span  {
-      float: left;
-      width: 40px;
-  }
+.leiden-transcription {
+  font-family: NewAthena;
+}
 
-  .leiden-transcription {
-    font-family: NewAthena;
-  }
+.popupable {
+  text-decoration-line: underline;
+}
 
-  .leiden-div {
-    display:inline;
-  }
+.section-heading {
+  display:block;
+  margin-top:1em
+}
 
-  .popupable {
-    text-decoration:underline;
-  }
-
-
-  .section-heading {
-    display:block;
-    margin-top:1em
-  }
-
-  ab {
-    display:inline;
-  }
-
-.single-space-holder::after { content: '\0020'; }
+.single-space-holder::after { 
+  content: '\0020'; 
+}
 
