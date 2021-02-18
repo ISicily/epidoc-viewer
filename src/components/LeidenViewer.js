@@ -14,7 +14,7 @@ const convert = (tei, openPopup) => {
    // parser.preserveWhitespace=true;
     const node = parser.parseFromString(fixedTEI, "application/xml").querySelector('div[type="edition"]');
     console.log(node)
-    const tw = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT);
+    const tw = document.createTreeWalker(node);
 
     // apply rules
     while (tw.nextNode()) {
@@ -33,7 +33,6 @@ const LeidenViewer = ({tei}) => {
     const [popupBody, setPopupBody] = React.useState();
 
     const handleOpenPopup = (title, body) => {
-        console.log('in the handle open')
         setPopupTitle(title)
         setPopupBody(body)
         setOpenPopup(true);

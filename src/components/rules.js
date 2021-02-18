@@ -13,34 +13,34 @@ const addSingleSpaceSpan = (node) => {
     node.appendChild(whitespaceElem)
 }
 
+
+/* 
+    when we hit a supplied, prepend a square bracket, and then start looking for an adjacent supplied.
+    As soon as we hit a text node with actual text, stop, and append a bracket to the last supplied we found.
+    If we hit another supplied, then start looking for another.
+
+    */
 const mergeAdjacentSupplied = (node, tw) => {
-    const descendants = getDescendants( node );
-   // tw.currentNode = node
+    let lastVisitedSupplied = node;
+    node.prepend('[')
+    let descendants = getDescendants( node )
     let currentNode = tw.nextNode()
     while(currentNode) {
          if (descendants.includes(currentNode)) {
-            // skip all descendants of the first 'supplied'
+            // skip all descendants of 'supplied'
             currentNode = tw.nextNode()
-        } else if (currentNode.nodeType === Node.TEXT_NODE && ! currentNode.nodeValue.trim().length) {
-            // text node with just whitespace
-            // So, we add another element to keep the one space,
-            // and then apply CSS to it later to keep the space character
-            addSingleSpaceSpan(currentNode)
-            currentNode = tw.nextNode();
         } else if (currentNode.nodeType === Node.TEXT_NODE && currentNode.nodeValue.trim().length) {
-            // if text node and not empty then we are done
-            currentNode = null
-        } else if (currentNode.nodeType === Node.ELEMENT_NODE && currentNode.nodeName !== 'supplied') {
-            // found some other element other than a supplied, so there is no
-            // contiguous 'supplied' and we are therefore done
+            // text node with actual text (not just whitespace) so we are done
+            lastVisitedSupplied.append(']')
             currentNode = null
         } else if (currentNode.nodeType === Node.ELEMENT_NODE && currentNode.nodeName === 'supplied') {
-            // we've found a 'supplied' contiguous with the first supplied so copy
-            // the children from the second supplied to the first supplied
-            [...currentNode.childNodes].forEach(child => node.appendChild(child))
-            currentNode = tw.nextNode();
-            
+            // we've found another adjacent supplied
+            lastVisitedSupplied = currentNode;
+            currentNode.setAttribute('leiden-processed', 'true')  // this is so we don't apply our rule to this 'suuplied' later
+            getDescendants(currentNode) // now ignore the descendants of this 'supplied' node 
+            currentNode = tw.nextNode()  
         } else {
+            // skip over any other nodes, e.g, empty text nodes, other elements, etc.
             currentNode = tw.nextNode()
         }
     }
@@ -113,12 +113,9 @@ const rules = {
     'placename': hyperlinkNode,
     'persname': hyperlinkNode,
     'supplied': (node, tw) => {
-        // if the node is empty then do nothing, 
-        // it is likely a 'supplied' that we merged into the prior 'supplied'
-        if (node.textContent.trim() === '') return null
+        // ignore 'supplied' that we merged into a prior 'supplied'
+        if (node.getAttribute('leiden-processed') === 'true') return null
         mergeAdjacentSupplied(node, tw)
-        node.prepend('[')
-        node.append(']')
     },
     'unclear': node => {
             node.textContent = node.textContent.split('').map(character => character + '\u0323').join('').trim();
