@@ -11,6 +11,10 @@
   text-decoration-line: underline;
 }
 
+.underline {
+  text-decoration-line: underline;
+}
+
 .section-heading {
   display:block;
   margin-top:1em

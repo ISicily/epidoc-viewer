@@ -14,6 +14,36 @@ const addSingleSpaceSpan = (node) => {
 }
 
 
+function underlineIfUndefined(node) {
+    const evidence = node.getAttribute("evidence");
+    if (evidence && evidence.toLowerCase() === 'previouseditor' && node.getAttribute('reason') === 'undefined') {
+        const underlineSpan = document.createElement('span');
+        underlineSpan.className = 'underline';
+        [...node.childNodes].forEach(child => underlineSpan.appendChild(child));
+        node.appendChild(underlineSpan);
+    }
+}
+
+function addOpeningBracket(reason, node) {
+    if (reason === 'lost') {
+        node.prepend('[');
+    } else if (reason === 'omitted') {
+        node.prepend('<');
+    } else if (reason === 'subaudible') {
+        node.prepend('(scil. ');
+    }
+}
+
+function addClosingBracket(reason, node) {
+    if (reason === 'lost') {
+        node.append(']');
+    } else if (reason === 'omitted') {
+        node.append('>');
+    } else if (reason === 'subaudible') {
+        node.append(')');
+    }
+}
+
 /* 
     when we hit a supplied, prepend a square bracket, and then start looking for an adjacent supplied.
     As soon as we hit a text node with actual text, stop, and append a bracket to the last supplied we found.
@@ -21,29 +51,45 @@ const addSingleSpaceSpan = (node) => {
 
     */
 const mergeAdjacentSupplied = (node, tw) => {
+    const isUncertain = node.getAttribute('cert') === 'low'
+    const reason = node.getAttribute('reason')
     let lastVisitedSupplied = node;
-    node.prepend('[')
+    addOpeningBracket(reason, node);
+    underlineIfUndefined(node)
+    if (isUncertain) node.append('(?)')
     let descendants = getDescendants( node )
     let currentNode = tw.nextNode()
     while(currentNode) {
          if (descendants.includes(currentNode)) {
             // skip all descendants of 'supplied'
             currentNode = tw.nextNode()
-        } else if (currentNode.nodeType === Node.TEXT_NODE && currentNode.nodeValue.trim().length) {
+        } else if ((currentNode.nodeType === Node.TEXT_NODE && currentNode.nodeValue.trim().length) ||
+                        ( currentNode.nodeType === Node.ELEMENT_NODE 
+                            && ['lb', 'ab', 'cb', 'div'].includes(currentNode.nodeName))) {
             // text node with actual text (not just whitespace) so we are done
-            lastVisitedSupplied.append(']')
             currentNode = null
+        } else if (currentNode.nodeType === Node.ELEMENT_NODE 
+            && currentNode.nodeName === 'supplied' 
+            && currentNode.getAttribute('reason') !== reason) {
+            // we've hit another 'supplied' but with a different reason, so we are done
+            currentNode = null    
         } else if (currentNode.nodeType === Node.ELEMENT_NODE && currentNode.nodeName === 'supplied') {
             // we've found another adjacent supplied
+            underlineIfUndefined(currentNode);
             lastVisitedSupplied = currentNode;
+            if (currentNode.getAttribute('cert') === "low") currentNode.append('(?)')
             currentNode.setAttribute('leiden-processed', 'true')  // this is so we don't apply our rule to this 'suuplied' later
-            getDescendants(currentNode) // now ignore the descendants of this 'supplied' node 
+            descendants = getDescendants(currentNode) // now ignore the descendants of this 'supplied' node 
             currentNode = tw.nextNode()  
         } else {
             // skip over any other nodes, e.g, empty text nodes, other elements, etc.
             currentNode = tw.nextNode()
         }
+          
     }
+    // need to append the end bracket here if we've reached the end of the elements, 
+        // without having hit a text node earlier
+        addClosingBracket(reason, lastVisitedSupplied); 
     // reset tree walker back to original node
     tw.currentNode = node
 }
@@ -90,9 +136,9 @@ const rules = {
     },
     'cb': node => {
         const title = document.createElement('span')
-            title.className += ' section-heading';
-            title.append(`Col. ${node.getAttribute('n')}`)
-            node.prepend(title)
+        title.className += ' section-heading';
+        title.append(`Col. ${node.getAttribute('n')}`)
+        node.prepend(title)
     }, 
     'ab': node => {
         const span = document.createElement('span')
@@ -154,44 +200,44 @@ const rules = {
         mergeAdjacentSupplied(node, tw)
     },
     'unclear': node => {
-            node.textContent = node.textContent.split('').map(character => character + '\u0323').join('').trim();
+        node.textContent = node.textContent.split('').map(character => character + '\u0323').join('').trim();
     },
     'hi': node => {
         const rend = node.getAttribute('rend');
-            if ( rend === 'ligature') {
-                const oldText = node.textContent;
-                node.textContent = oldText.charAt(0) + '\u0302' + oldText.substring(1);
-            } else if (rend==="superscript") {
-                const sup = document.createElement('sup')
-                sup.textContent = node.textContent
-                node.textContent = ''
-                node.appendChild(sup)
-            }
+        if ( rend === 'ligature') {
+            const oldText = node.textContent;
+            node.textContent = oldText.charAt(0) + '\u0302' + oldText.substring(1);
+        } else if (rend==="superscript") {
+            const sup = document.createElement('sup')
+            sup.textContent = node.textContent
+            node.textContent = ''
+            node.appendChild(sup)
+        }
     },
     'lb': node => {
-            const breakAttr = node.getAttribute('break');
-            const n = node.getAttribute('n')
-            const style = node.getAttribute('style')
-            let textIndicator = ' '
-            if (style === "text-direction:r-to-l") {
-                textIndicator = '←'
-            } else if (style === "text-direction:l-to-r") {
-                textIndicator = '→'
-            } else if (style === "text-direction:spiral-clockwise") {
-                textIndicator = '↻'
-            } else if (style === "text-direction:spiral-anticlockwise") {
-                textIndicator = '↺'
-            } else if (style === "text-direction:upwards") {
-                textIndicator = '↑'
-            } else if (style === "text-direction:downwards") {
-                textIndicator = '↓'
-            } 
-            if (breakAttr === 'no') node.append('-');
-            if (n !== 1) node.append(document.createElement('br'));
-            const numSpan = document.createElement('span')
-            numSpan.className += ' leiden-num-span'
-            numSpan.append(`${n}. ${textIndicator}`)
-            node.append(numSpan)
+        const breakAttr = node.getAttribute('break');
+        const n = node.getAttribute('n')
+        const style = node.getAttribute('style')
+        let textIndicator = ' '
+        if (style === "text-direction:r-to-l") {
+            textIndicator = '←'
+        } else if (style === "text-direction:l-to-r") {
+            textIndicator = '→'
+        } else if (style === "text-direction:spiral-clockwise") {
+            textIndicator = '↻'
+        } else if (style === "text-direction:spiral-anticlockwise") {
+            textIndicator = '↺'
+        } else if (style === "text-direction:upwards") {
+            textIndicator = '↑'
+        } else if (style === "text-direction:downwards") {
+            textIndicator = '↓'
+        } 
+        if (breakAttr === 'no') node.append('-');
+        if (n !== 1) node.append(document.createElement('br'));
+        const numSpan = document.createElement('span')
+        numSpan.className += ' leiden-num-span'
+        numSpan.append(`${n}. ${textIndicator}`)
+        node.append(numSpan)
     },
     'choice': (node, tw, openPopup ) => {
         const reg = node.querySelector('reg')
@@ -209,58 +255,60 @@ const rules = {
         node.append(sup)
     },
     'gap': node => {
-            let elementText;
-            const reason = node.getAttribute('reason');  // 'lost' 'illegible' 'omitted'
-            const extent = node.getAttribute('extent');  // always 'unknown' if present?  - never in combination with quantity or atLeast/atMost
-            const quantity = node.getAttribute('quantity'); // not in combination with extent or atLeast/atMost
-            const unit = node.getAttribute('unit');  // character or line
-            const atLeast = node.getAttribute('atLeast');  // not in combination with extent or quantity
-            const atMost = node.getAttribute('atMost');     // not in combination with extent or quantity
-            const precision = node.getAttribute('precision');  // 'low' output: ca. 
-            const precisionOutput = precision && precision === 'low' ? 'ca.' : '' 
-            const isLine = unit && unit === 'line';
-            if (reason === 'lost') {
-                if (isLine) {
-                    elementText = (extent==='unknown') ?
-                        ' - - - - - ' :
-                        '  [- - - - - -]  ' ; 
-                } else {
-                    elementText = '[';
-                    if (extent === 'unknown') {
-                        elementText += '- - ? - -';
-                    } else if (atLeast || atMost) {
-                        elementText += ` - ${atLeast}-${atMost} - `
-                    } else if (quantity && quantity < 5) {
-                        elementText += '. '.repeat(quantity).trim();
-                    } else if (quantity && quantity >= 5) {
-                        // QEUSTION:  SHOULD THE PRECISION OUTPUT BE ELSEWHERE TOO?
-                        if (precision === 'low') {
-                            elementText += `- - ${precisionOutput}${quantity} - - `
-                        } else {
-                            elementText += `. . ${quantity} . . `
-                        } 
-                    }
-                    elementText += ']';
-                }
-            } else if (reason === 'illegible') {
-                const beforeText = isLine ? '(Traces of ' : '. . '
-                const afterText = isLine ? ' lines)' : ' . .'
+        let elementText;
+        const reason = node.getAttribute('reason');  // 'lost' 'illegible' 'omitted'
+        const extent = node.getAttribute('extent');  // always 'unknown' if present?  - never in combination with quantity or atLeast/atMost
+        const quantity = node.getAttribute('quantity'); // not in combination with extent or atLeast/atMost
+        const unit = node.getAttribute('unit');  // character or line
+        const atLeast = node.getAttribute('atLeast');  // not in combination with extent or quantity
+        const atMost = node.getAttribute('atMost');     // not in combination with extent or quantity
+        const precision = node.getAttribute('precision');  // 'low' output: ca. 
+        const precisionOutput = precision && precision === 'low' ? 'ca.' : '' 
+        const isLine = unit && unit === 'line';
+        if (reason === 'lost') {
+            if (isLine) {
+                elementText = (extent==='unknown') ?
+                    ' - - - - - ' :
+                    '  [- - - - - -]  ' ; 
+            } else {
+                elementText = '[';
                 if (extent === 'unknown') {
-                    elementText = isLine ?
-                    `${beforeText.trim()}${afterText}` :
-                    `${beforeText}?${afterText}`
+                    elementText += '- - ? - -';
                 } else if (atLeast || atMost) {
-                    elementText = `${beforeText}${atLeast}-${atMost}${afterText}`
+                    elementText += ` - ${atLeast}-${atMost} - `
                 } else if (quantity && quantity < 5) {
-                    elementText = '. '.repeat(quantity).trim();
+                    elementText += '. '.repeat(quantity).trim();
                 } else if (quantity && quantity >= 5) {
-                    elementText = `${beforeText}${precisionOutput}${quantity}${afterText}`
+                    if (precision === 'low') {
+                        elementText += `- - ${precisionOutput}${quantity} - - `
+                    } else {
+                        elementText += `. . ${quantity} . . `
+                    } 
                 }
-            } else if (reason === 'omitted') {
-                elementText = '<- - ? - ->';
+                elementText += ']';
             }
-            node.textContent = elementText;
-    }
+        } else if (reason === 'illegible') {
+            const beforeText = isLine ? '(Traces of ' : '. . '
+            const afterText = isLine ? ' lines)' : ' . .'
+            if (extent === 'unknown') {
+                elementText = isLine ?
+                `${beforeText.trim()}${afterText}` :
+                `${beforeText}?${afterText}`
+            } else if (atLeast || atMost) {
+                elementText = `${beforeText}${atLeast}-${atMost}${afterText}`
+            } else if (quantity && quantity < 5) {
+                elementText = '. '.repeat(quantity).trim();
+            } else if (quantity && quantity >= 5) {
+                elementText = `${beforeText}${precisionOutput}${quantity}${afterText}`
+            }
+        } else if (reason === 'omitted') {
+            elementText = '<- - ? - ->';
+        }
+        node.textContent = elementText;
+}
 }
 
 export default rules
+
+
+
