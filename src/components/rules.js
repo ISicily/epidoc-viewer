@@ -146,7 +146,18 @@ const rules = {
         [...node.childNodes].forEach(child => span.appendChild(child));
         node.appendChild(span)
     },
-    'ex': node => {node.prepend('('); node.append(')')},
+    'ex': node => {
+        const cert = node.getAttribute('cert')
+        node.prepend('('); 
+        if (cert === 'low') node.append('?')
+        node.append(')')
+    },
+    'abbr': node => {
+        if (node.parentNode.nodeName !== 'expan') node.append('(- - -)')
+    },
+    'am': node => {
+        node.textContent = ''
+    },
     'del': (node) => {
         const rend = node.getAttribute('rend');
         if (rend ==="erasure") {
@@ -168,6 +179,18 @@ const rules = {
             node.prepend('«')
             node.append('»')
         }
+    },
+    'surplus': node => {
+        node.prepend('{')
+        node.append('}')
+    },
+    'desc': node => {
+        node.prepend('(')
+        node.append(')')
+    },
+    'note': node => {
+        node.prepend('(')
+        node.append(')')
     },
     'space': node => {
         const extent = node.getAttribute('extent');  
@@ -263,13 +286,17 @@ const rules = {
         const atLeast = node.getAttribute('atLeast');  // not in combination with extent or quantity
         const atMost = node.getAttribute('atMost');     // not in combination with extent or quantity
         const precision = node.getAttribute('precision');  // 'low' output: ca. 
-        const precisionOutput = precision && precision === 'low' ? 'ca.' : '' 
-        const isLine = unit && unit === 'line';
+        const precisionOutput = precision && precision === 'low' ? 'ca.' : '' ;
+        const isLine = (unit && unit === 'line');
+        let closingDelimiter = ''
         if (reason === 'lost') {
             if (isLine) {
-                elementText = (extent==='unknown') ?
-                    ' - - - - - ' :
-                    '  [- - - - - -]  ' ; 
+                if (extent==='unknown') {
+                    elementText =  ' - - - - - ' 
+                } else {
+                    elementText = '  [- - - - - -';
+                    closingDelimiter = ']  '
+                }
             } else {
                 elementText = '[';
                 if (extent === 'unknown') {
@@ -285,7 +312,7 @@ const rules = {
                         elementText += `. . ${quantity} . . `
                     } 
                 }
-                elementText += ']';
+                closingDelimiter = ']';
             }
         } else if (reason === 'illegible') {
             const beforeText = isLine ? '(Traces of ' : '. . '
@@ -302,9 +329,11 @@ const rules = {
                 elementText = `${beforeText}${precisionOutput}${quantity}${afterText}`
             }
         } else if (reason === 'omitted') {
-            elementText = '<- - ? - ->';
+            elementText = '<- - ? - ';
+            closingDelimiter = '->'
         }
-        node.textContent = elementText;
+        node.prepend(elementText);
+        node.append(closingDelimiter)
 }
 }
 
