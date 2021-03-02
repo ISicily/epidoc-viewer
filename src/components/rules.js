@@ -156,14 +156,16 @@ const hyperlinkNode = node => {
         node.appendChild(a)
     }
 }
-
+// lighter arrow: \u2197   darker arrow: \u2B08
 const makePopupable = (subNode, node, title, openPopup) => {
+    const sup = document.createElement('sup')
+    sup.append('[\u2197]')
     const span = document.createElement('span')
-    span.className += ' popupable'
     span.addEventListener("click", ()=>openPopup(title, subNode.textContent))
     subNode.parentNode.removeChild(subNode);
     // copy the nodes children to the new span
     [...node.childNodes].forEach(child => span.appendChild(child));
+    span.appendChild(sup)
     node.appendChild(span)
 }
 
@@ -380,7 +382,7 @@ const rules = {
         }
         node.prepend(elementText);
         node.append(closingDelimiter)
-}
+    }
 }
 
 export default rules

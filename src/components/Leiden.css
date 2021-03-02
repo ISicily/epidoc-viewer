@@ -7,10 +7,6 @@
   font-family: NewAthena;
 }
 
-.popupable {
-  text-decoration-line: underline;
-}
-
 .underline {
   text-decoration-line: underline;
 }
@@ -23,7 +19,6 @@
   text-decoration-line: line-through;
 }
 
-
 .section-heading {
   display:block;
   margin-top:1em
@@ -32,4 +27,3 @@
 .single-space-holder::after { 
   content: '\0020'; 
 }
-
