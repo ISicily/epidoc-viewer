@@ -94,6 +94,57 @@ const mergeAdjacentSupplied = (node, tw) => {
     tw.currentNode = node
 }
 
+function processHi(node) {
+    const rend = node.getAttribute('rend');
+    if (rend === 'ligature') {
+        const oldText = node.textContent;
+        node.textContent = oldText.charAt(0) + '\u0302' + oldText.substring(1);
+       // QUESTION:  APPLY LIGATURE TO EACH LETTER EXCEPT FINAL??????  what if only 1?  
+       // Are there always only two letters in a ligature?
+       // I guess here I'd just loop through the letters, adding the unicode after each one, until
+       // I reach the last, then stop.
+    } else if (rend === "apex") {
+        const oldText = node.textContent;
+        node.textContent = oldText.charAt(0) + '\u0301' + oldText.substring(1)
+    } else if (rend === "reversed") {
+        node.prepend('((')
+        node.append('))')
+    } else if (rend === "tall" && node.textContent === 'i') {
+       /*  QUESTION:  COULD THEIR BE OTHER CHARACTERS BESIDES THE i IN THE 'HI'?  CAN I ASSUME IT WILL ALWAYS
+        JUST BE AN 'i'?? */
+        const oldText = node.textContent;
+        node.textContent = oldText.charAt(0) + '\u0300' + oldText.substring(1)
+    } else if (rend === "intraline") {
+        const strikethrough = document.createElement('span');
+        strikethrough.textContent = node.textContent;
+        strikethrough.className += ' strikethrough'
+        node.textContent = '';
+        node.appendChild(strikethrough);
+        /* const strikethrough = document.createElement('s');
+        strikethrough.textContent = node.textContent;
+        node.textContent = '';
+        node.appendChild(strikethrough); */
+    } else if (rend === "supraline") {
+        const supraline = document.createElement('span');
+        supraline.textContent = node.textContent;
+        supraline.className += ' supraline'
+        node.textContent = '';
+        node.appendChild(supraline);
+    } else if (rend === "underline") {
+        const underline = document.createElement('span');
+        underline.textContent = node.textContent;
+        underline.className += ' underline'
+        node.textContent = '';
+        node.appendChild(underline);
+    } else if (rend === "superscript") {
+        const sup = document.createElement('sup');
+        sup.textContent = node.textContent;
+        node.textContent = '';
+        node.appendChild(sup);
+    }
+
+}
+
 const hyperlinkNode = node => {
     const ref = node.getAttribute('ref');
     if (ref) {
@@ -178,6 +229,9 @@ const rules = {
         if (place === 'overstrike') {
             node.prepend('«')
             node.append('»')
+        } else if (place === 'above') {
+            node.prepend('`') 
+            node.append('´')
         }
     },
     'surplus': node => {
@@ -226,16 +280,8 @@ const rules = {
         node.textContent = node.textContent.split('').map(character => character + '\u0323').join('').trim();
     },
     'hi': node => {
-        const rend = node.getAttribute('rend');
-        if ( rend === 'ligature') {
-            const oldText = node.textContent;
-            node.textContent = oldText.charAt(0) + '\u0302' + oldText.substring(1);
-        } else if (rend==="superscript") {
-            const sup = document.createElement('sup')
-            sup.textContent = node.textContent
-            node.textContent = ''
-            node.appendChild(sup)
-        }
+
+        processHi(node);
     },
     'lb': node => {
         const breakAttr = node.getAttribute('break');
@@ -338,6 +384,5 @@ const rules = {
 }
 
 export default rules
-
 
 
