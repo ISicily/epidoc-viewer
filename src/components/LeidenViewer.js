@@ -13,7 +13,6 @@ const convert = (tei, openPopup) => {
     const fixedTEI = tei.replace(/[\r\n\t]/g, "")
    // parser.preserveWhitespace=true;
     const node = parser.parseFromString(fixedTEI, "application/xml").querySelector('div[type="edition"]');
-    console.log(node)
     const tw = document.createTreeWalker(node);
 
     // apply rules

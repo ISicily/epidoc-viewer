@@ -67,6 +67,9 @@ const mergeAdjacentSupplied = (node, tw) => {
                         ( currentNode.nodeType === Node.ELEMENT_NODE 
                             && ['lb', 'ab', 'cb', 'div'].includes(currentNode.nodeName))) {
             // text node with actual text (not just whitespace) so we are done
+            // *** HERE IS WHERE I COULD CLOSE A BRACKET BEFORE A LINE BREAK, AND THEN REOPEN JUST AFTER THE LB?
+            // BASICALLY JUST PREPEND CLOSING, AND APPEND OPENING.
+            // I'D HAVE TO MOVE THE CHECK FOR LB, ETC. INTO A NEW ELSE-IF
             currentNode = null
         } else if (currentNode.nodeType === Node.ELEMENT_NODE 
             && currentNode.nodeName === 'supplied' 
