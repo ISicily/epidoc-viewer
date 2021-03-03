@@ -100,12 +100,8 @@ const mergeAdjacentSupplied = (node, tw) => {
 function processHi(node) {
     const rend = node.getAttribute('rend');
     if (rend === 'ligature') {
-        const oldText = node.textContent;
-        node.textContent = oldText.charAt(0) + '\u0302' + oldText.substring(1);
-       // QUESTION:  APPLY LIGATURE TO EACH LETTER EXCEPT FINAL??????  what if only 1?  
-       // Are there always only two letters in a ligature?
-       // I guess here I'd just loop through the letters, adding the unicode after each one, until
-       // I reach the last, then stop.
+        // add circumflex over every character except last
+        node.textContent = node.textContent.split('').join('\u0302')
     } else if (rend === "apex") {
         const oldText = node.textContent;
         node.textContent = oldText.charAt(0) + '\u0301' + oldText.substring(1)
