@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/epidoc-viewer/static/css/main.a9bfb5ea.chunk.css",
-    "main.js": "/epidoc-viewer/static/js/main.2925a1e0.chunk.js",
-    "main.js.map": "/epidoc-viewer/static/js/main.2925a1e0.chunk.js.map",
+    "main.js": "/epidoc-viewer/static/js/main.b03bb272.chunk.js",
+    "main.js.map": "/epidoc-viewer/static/js/main.b03bb272.chunk.js.map",
     "runtime-main.js": "/epidoc-viewer/static/js/runtime-main.74bbf097.js",
     "runtime-main.js.map": "/epidoc-viewer/static/js/runtime-main.74bbf097.js.map",
     "static/js/2.56c89db1.chunk.js": "/epidoc-viewer/static/js/2.56c89db1.chunk.js",
@@ -18,6 +18,6 @@
     "static/js/runtime-main.74bbf097.js",
     "static/js/2.56c89db1.chunk.js",
     "static/css/main.a9bfb5ea.chunk.css",
-    "static/js/main.2925a1e0.chunk.js"
+    "static/js/main.b03bb272.chunk.js"
   ]
 }
