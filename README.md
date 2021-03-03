@@ -1,3 +1,8 @@
+![Oxford logo](https://github.com/ISicily/epidoc-viewer/blob/master/src/Oxford-University-rectangle-logo.png?raw=true)
+
+# I.Sicily EpiDoc Viewer
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

@@ -70,6 +70,10 @@ const mergeAdjacentSupplied = (node, tw) => {
             // *** HERE IS WHERE I COULD CLOSE A BRACKET BEFORE A LINE BREAK, AND THEN REOPEN JUST AFTER THE LB?
             // BASICALLY JUST PREPEND CLOSING, AND APPEND OPENING.
             // I'D HAVE TO MOVE THE CHECK FOR LB, ETC. INTO A NEW ELSE-IF
+            // Actually no, because I have to be careful not to combine across breaks.  the only case is when there is a supplied 
+            // that crosses the break.  Which I guess I catch by checking for a break within the children of the
+            // 'supplied'.  so, TODO:  add a check in the descendants for a break, and if there, add an
+            // opening bracket before, and a closing bracket after.
             currentNode = null
         } else if (currentNode.nodeType === Node.ELEMENT_NODE 
             && currentNode.nodeName === 'supplied' 
@@ -87,8 +91,7 @@ const mergeAdjacentSupplied = (node, tw) => {
         } else {
             // skip over any other nodes, e.g, empty text nodes, other elements, etc.
             currentNode = tw.nextNode()
-        }
-          
+        }         
     }
     // need to append the end bracket here if we've reached the end of the elements, 
         // without having hit a text node earlier
