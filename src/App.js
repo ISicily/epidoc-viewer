@@ -9,6 +9,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import LeidenViewer from './components/LeidenViewer'
 
+import InterpretedToggle from './components/InterpretedToggle'
+
 const useStyles = makeStyles({
   root: {
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -31,6 +33,12 @@ const useStyles = makeStyles({
 function App() {
 
   const [tei, setTei] = useState()
+
+  const [showInterpreted, setShowInterpreted] = React.useState(true);
+    
+  const handleChange = (event) => {
+    setShowInterpreted(event.target.checked);
+  };
 
   useEffect(() => {
     fetch('https://raw.githubusercontent.com/ISicily/ISicily/master/alists/ISic-all-example.xml')
@@ -67,10 +75,16 @@ function App() {
         </Grid>
         <Grid item xs={6} >
           <Paper >
-          <h4>Leiden</h4>
+            <Grid container direction="row"
+  justify="center"
+  alignItems="center"
+>
+              <Grid item xs={4}></Grid>
+              <Grid item xs={4}><h4>Leiden</h4></Grid>
+              <Grid item xs={4}><span style={{float: 'right', minWidth: '200px'}}><InterpretedToggle checked={showInterpreted} onChange={handleChange}/></span></Grid>
+            </Grid>
             <Box height={'32em'} overflow="auto" >
-            
-            <LeidenViewer tei={tei}/>
+            <LeidenViewer tei={tei} showInterpreted={showInterpreted}/>
           </Box>
           </Paper>
         </Grid>
@@ -84,3 +98,15 @@ function App() {
 
 
 export default App;
+
+/* 
+{ 
+  width:200px; 
+  height:200px; 
+  position: fixed; 
+  background-color: blue; 
+  top: 50%; 
+  left: 50%; 
+  margin-top: -100px; 
+  margin-left: -100px; 
+}  */
