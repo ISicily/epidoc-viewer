@@ -112,11 +112,6 @@ function processHi(node) {
     } else if (rend === "reversed") {
         node.prepend('((')
         node.append('))')
-    } else if (rend === "tall" && node.textContent === 'i') {
-       /*  QUESTION:  COULD THEIR BE OTHER CHARACTERS BESIDES THE i IN THE 'HI'?  CAN I ASSUME IT WILL ALWAYS
-        JUST BE AN 'i'?? */
-        const oldText = node.textContent;
-        node.textContent = oldText.charAt(0) + '\u0300' + oldText.substring(1)
     } else if (rend === "intraline") {
         const strikethrough = document.createElement('span');
         strikethrough.textContent = node.textContent;
