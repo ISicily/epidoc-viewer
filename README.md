@@ -2,6 +2,20 @@
 
 # I.Sicily EpiDoc Viewer
 
+Transforms EpiDoc into a conventional set of editorial mark-up, based upon the Leiden conventions in epigraphic studies.
+
+You can play with the Githup Pages version of this app:
+
+[https://isicily.github.io/epidoc-viewer/](https://isicily.github.io/epidoc-viewer/)
+
+Just paste your epidoc into the 'epidoc' panel.  It will (more-or-less) instantly generate equivalent Leiden in the 'leiden' panel.  Any change you make in the epidoc panel will update the Leiden.
+
+You can also fork this repository if you'd like to tweak the epidoc to leiden rules.  There two sets of rules:
+
+[Interpreted](https://github.com/ISicily/epidoc-viewer/blob/master/src/components/rules.js)
+[Diplomatic](https://github.com/ISicily/epidoc-viewer/blob/master/src/components/diplomaticRules.js)
+
+The conversion uses a TreeWalker to walk through the epidoc XML tree in document order, applying rules to the elements as it goes.
 
 # Getting Started with Create React App
 
