@@ -13,6 +13,7 @@ Just paste your epidoc into the 'epidoc' panel.  It will (more-or-less) instantl
 You can also fork this repository if you'd like to tweak the epidoc to leiden rules.  There two sets of rules:
 
 [Interpreted](https://github.com/ISicily/epidoc-viewer/blob/master/src/components/rules.js)
+
 [Diplomatic](https://github.com/ISicily/epidoc-viewer/blob/master/src/components/diplomaticRules.js)
 
 The conversion uses a TreeWalker to walk through the epidoc XML tree in document order, applying rules to the elements as it goes.
