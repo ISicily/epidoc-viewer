@@ -4,19 +4,37 @@
 
 Transforms EpiDoc into a conventional set of editorial mark-up, based upon the Leiden conventions in epigraphic studies.
 
-You can play with the Githup Pages version of this app:
+You can play with the tranformation using the Githup Pages version of this app:
 
 [https://isicily.github.io/epidoc-viewer/](https://isicily.github.io/epidoc-viewer/)
 
-Just paste your epidoc into the 'epidoc' panel.  It will (more-or-less) instantly generate equivalent Leiden in the 'leiden' panel.  Any change you make in the epidoc panel will update the Leiden.
+The TEI document that appears there now is pulled automatically from:
 
-You can also fork this repository if you'd like to tweak the epidoc to leiden rules.  There two sets of rules:
+[https://raw.githubusercontent.com/ISicily/ISicily/master/alists/ISic-all-example.xml](https://raw.githubusercontent.com/ISicily/ISicily/master/alists/ISic-all-example.xml)
+
+and includes exemplars of the conversion rules.
+
+Convert your own epidoc by replacing what's in the 'epidoc' panel with your own epidoc.  You must paste at least a `div[type="edition"]` but can also paste the entire TEI Doc if you like.  The converter will (more-or-less) instantly generate equivalent Leiden in the 'leiden' panel.  Any change you make in the epidoc panel will update the Leiden.
+
+You can also fork this repository if you'd like to tweak the epidoc to leiden rules.  There are two sets of rules:
 
 [Interpreted](https://github.com/ISicily/epidoc-viewer/blob/master/src/components/rules.js)
 
 [Diplomatic](https://github.com/ISicily/epidoc-viewer/blob/master/src/components/diplomaticRules.js)
 
-The conversion uses a TreeWalker to walk through the epidoc XML tree in document order, applying rules to the elements as it goes.
+The conversion uses a [TreeWalker](https://developer.mozilla.org/en-US/docs/Web/API/TreeWalker) to walk through the epidoc XML tree in document order, applying rules to the elements as it goes.
+
+There is also an associated CSS stylesheet [https://github.com/ISicily/epidoc-viewer/blob/master/src/components/Leiden.css](https://github.com/ISicily/epidoc-viewer/blob/master/src/components/Leiden.css)
+
+We render the viewer with React, but the underlying rules and their application are pure javascript/css.  Use them in any javascript project - the bits you need are comfortably ensconsed within:
+
+(https://github.com/ISicily/epidoc-viewer/blob/master/src/components/convert.js)[https://github.com/ISicily/epidoc-viewer/blob/master/src/components/convert.js]
+
+and
+
+https://github.com/ISicily/epidoc-viewer/blob/master/src/components/Leiden.css](https://github.com/ISicily/epidoc-viewer/blob/master/src/components/Leiden.css)
+
+We may at some point extract this to an NPM module - let us know if that would be useful for your project.  We might also extract a React component to NPM if that could be help anyone.
 
 # Getting Started with Create React App
 
