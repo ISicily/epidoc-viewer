@@ -34,7 +34,7 @@ and
 
 https://github.com/ISicily/epidoc-viewer/blob/master/src/components/Leiden.css](https://github.com/ISicily/epidoc-viewer/blob/master/src/components/Leiden.css)
 
-We may at some point extract this to an NPM module - let us know if that would be useful for your project.  We might also extract a React component to NPM if that could be help anyone.
+We may at some point extract this to an NPM module - let us know if that would be useful for your project.  We might also extract a React component to NPM if that would be useful.
 
 # Getting Started with Create React App
 
