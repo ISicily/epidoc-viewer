@@ -187,12 +187,6 @@ const rules = {
             node.prepend(title)
         }
     },
-    'cb': node => {
-        const title = document.createElement('span')
-        title.className += ' section-heading';
-        title.append(`Col. ${node.getAttribute('n')}`)
-        node.prepend(title)
-    }, 
     'ab': node => {
         const span = document.createElement('span')
         span.className += ' leiden-transcription';
@@ -293,12 +287,6 @@ const rules = {
         } else if (corr) {
             makePopupable(corr, node, 'Correction', openPopup)
         }
-    },
-    'milestone': node => {
-        const sup = document.createElement('sup')
-        sup.textContent = `${node.getAttribute('n')}`
-        node.append('|')
-        node.append(sup)
     },
     'gap': node => {
         let elementText;
