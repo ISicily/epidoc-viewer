@@ -1,6 +1,27 @@
 const sharedRules = (isInterpreted) => {
     return {
-
+        'div': node => {
+            const type = node.getAttribute('type')
+            const subtype = node.getAttribute('subtype')
+            const n = node.getAttribute('n')
+            if (type === 'textpart' && subtype === 'section') {
+                const title = document.createElement('span')
+                title.className += ' section-heading';
+                title.append(`${subtype} ${n}`)
+                node.prepend(title)
+            } else if (type === 'edition' && subtype === 'transliteration') {
+                const title = document.createElement('span')
+                title.className += ' section-heading';
+                title.append(`Transliteration`)
+                node.prepend(title)
+            }
+        },
+        'ab': node => {
+            const span = document.createElement('span')
+            span.className += ' leiden-transcription';
+            [...node.childNodes].forEach(child => span.appendChild(child));
+            node.appendChild(span)
+        },
         'milestone': node => {
             const sup = document.createElement('sup')
             sup.textContent = `${node.getAttribute('n')}`
