@@ -59,6 +59,84 @@ const sharedRules = (isInterpreted) => {
             numSpan.append(`${n}. ${textIndicator}`)
             node.append(numSpan)
         },
+        'space': node => {
+            const extent = node.getAttribute('extent');  
+            const unit = node.getAttribute('unit');  // character or line
+            const isUncertain = node.getAttribute('cert') === 'low'
+            const quantity = node.getAttribute('quantity'); 
+            let textContent = '('
+            if (unit === 'line') {
+                textContent += 'vacat'
+            } else {
+                if (quantity || (extent === 'unknown' && isUncertain)) {
+                    textContent += 'vac.'
+                    if (quantity > 1) textContent += quantity
+                    if (isUncertain) textContent += '?'   
+                } else if (extent === 'unknown') {
+                    textContent += 'vacat'
+                } 
+            }
+            textContent += ')'
+            node.textContent = textContent
+        },
+        'gap': node => {
+            let elementText;
+            const reason = node.getAttribute('reason');  // 'lost' 'illegible' 'omitted'
+            const extent = node.getAttribute('extent');  // always 'unknown' if present?  - never in combination with quantity or atLeast/atMost
+            const quantity = node.getAttribute('quantity'); // not in combination with extent or atLeast/atMost
+            const unit = node.getAttribute('unit');  // character or line
+            const atLeast = node.getAttribute('atLeast');  // not in combination with extent or quantity
+            const atMost = node.getAttribute('atMost');     // not in combination with extent or quantity
+            const precision = node.getAttribute('precision');  // 'low' output: ca. 
+            const precisionOutput = precision && precision === 'low' ? 'ca.' : '' ;
+            const isLine = (unit && unit === 'line');
+            let closingDelimiter = ''
+            if (reason === 'lost') {
+                if (isLine) {
+                    if (extent==='unknown') {
+                        elementText =  ' - - - - - ' 
+                    } else {
+                        elementText = '  [- - - - - -';
+                        closingDelimiter = ']  '
+                    }
+                } else {
+                    elementText = '[';
+                    if (extent === 'unknown') {
+                        elementText += '- - ? - -';
+                    } else if (atLeast || atMost) {
+                        elementText += ` - ${atLeast}-${atMost} - `
+                    } else if (quantity && quantity < 5) {
+                        elementText += '. '.repeat(quantity).trim();
+                    } else if (quantity && quantity >= 5) {
+                        if (precision === 'low') {
+                            elementText += `- - ${precisionOutput}${quantity} - - `
+                        } else {
+                            elementText += `. . ${quantity} . . `
+                        } 
+                    }
+                    closingDelimiter = ']';
+                }
+            } else if (reason === 'illegible') {
+                const beforeText = isLine ? '(Traces of ' : '. . '
+                const afterText = isLine ? ' lines)' : ' . .'
+                if (extent === 'unknown') {
+                    elementText = isLine ?
+                    `${beforeText.trim()}${afterText}` :
+                    `${beforeText}?${afterText}`
+                } else if (atLeast || atMost) {
+                    elementText = `${beforeText}${atLeast}-${atMost}${afterText}`
+                } else if (quantity && quantity < 5) {
+                    elementText = '. '.repeat(quantity).trim();
+                } else if (quantity && quantity >= 5) {
+                    elementText = `${beforeText}${precisionOutput}${quantity}${afterText}`
+                }
+            } else if (reason === 'omitted') {
+                elementText = '<- - ? - ';
+                closingDelimiter = '->'
+            }
+            node.prepend(elementText);
+            node.append(closingDelimiter)
+        }
     }
 }
 

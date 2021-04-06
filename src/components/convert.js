@@ -16,9 +16,11 @@ const convert = (tei, openPopup, showInterpreted) => {
         fixedTEI = normalizeText(fixedTEI)
     }
 
-    const editions = parser.parseFromString(fixedTEI, "application/xml").querySelectorAll('div[type="edition"]');
     const parent = document.createElement('div')
-    editions.forEach(node=>parent.appendChild(node))
+    parser.
+        parseFromString(fixedTEI, "application/xml").
+        querySelectorAll('div[type="edition"]').
+        forEach(node=>parent.appendChild(node))
     
    // parser.preserveWhitespace=true;
     
@@ -28,6 +30,7 @@ const convert = (tei, openPopup, showInterpreted) => {
     const rulesToApply = showInterpreted?rules:diplomaticRules
 
     while (tw.nextNode()) {
+        
         if (tw.currentNode.nodeType === Node.TEXT_NODE && ! showInterpreted) {
             tw.currentNode.nodeValue = tw.currentNode.nodeValue.toUpperCase()
         }
