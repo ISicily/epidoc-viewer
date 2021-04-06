@@ -1,3 +1,5 @@
+import sharedRules from './sharedRules.js'
+
 const getDescendants = (node, accum) => {
     accum = accum || [];
     [...node.childNodes].forEach(child => {
@@ -153,9 +155,10 @@ const hyperlinkNode = node => {
         node.appendChild(a)
     }
 }
-// lighter arrow: \u2197   darker arrow: \u2B08
+
 const makePopupable = (subNode, node, title, openPopup) => {
     const sup = document.createElement('sup')
+    // lighter arrow: \u2197   darker arrow: \u2B08
     sup.append('[\u2197]')
     const span = document.createElement('span')
     span.addEventListener("click", ()=>openPopup(title, subNode.textContent))
@@ -282,31 +285,6 @@ const rules = {
 
         processHi(node);
     },
-    'lb': node => {
-        const breakAttr = node.getAttribute('break');
-        const n = node.getAttribute('n')
-        const style = node.getAttribute('style')
-        let textIndicator = ' '
-        if (style === "text-direction:r-to-l") {
-            textIndicator = '←'
-        } else if (style === "text-direction:l-to-r") {
-            textIndicator = '→'
-        } else if (style === "text-direction:spiral-clockwise") {
-            textIndicator = '↻'
-        } else if (style === "text-direction:spiral-anticlockwise") {
-            textIndicator = '↺'
-        } else if (style === "text-direction:upwards") {
-            textIndicator = '↑'
-        } else if (style === "text-direction:downwards") {
-            textIndicator = '↓'
-        } 
-        if (breakAttr === 'no') node.append('-');
-        if (n !== 1) node.append(document.createElement('br'));
-        const numSpan = document.createElement('span')
-        numSpan.className += ' leiden-num-span'
-        numSpan.append(`${n}. ${textIndicator}`)
-        node.append(numSpan)
-    },
     'choice': (node, tw, openPopup ) => {
         const reg = node.querySelector('reg')
         const corr = node.querySelector('corr')
@@ -379,7 +357,8 @@ const rules = {
         }
         node.prepend(elementText);
         node.append(closingDelimiter)
-    }
+    },
+    ...sharedRules(true)
 }
 
 export default rules
