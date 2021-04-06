@@ -16,11 +16,13 @@ const convert = (tei, openPopup, showInterpreted) => {
         fixedTEI = normalizeText(fixedTEI)
     }
 
-    const node = parser.parseFromString(fixedTEI, "application/xml").querySelector('div[type="edition"]');
-   
+    const editions = parser.parseFromString(fixedTEI, "application/xml").querySelectorAll('div[type="edition"]');
+    const parent = document.createElement('div')
+    editions.forEach(node=>parent.appendChild(node))
+    
    // parser.preserveWhitespace=true;
     
-    const tw = document.createTreeWalker(node);
+    const tw = document.createTreeWalker(parent);
 
     // choose interpreted or diplomatic rules
     const rulesToApply = showInterpreted?rules:diplomaticRules
@@ -32,8 +34,8 @@ const convert = (tei, openPopup, showInterpreted) => {
         const rule = rulesToApply[tw.currentNode.nodeName]
         if (rule) rule(tw.currentNode, tw, openPopup)
     }
-  
-    return node
+
+    return parent
 }
 
 export default convert

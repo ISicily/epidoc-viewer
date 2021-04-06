@@ -185,6 +185,11 @@ const rules = {
             title.className += ' section-heading';
             title.append(`${subtype} ${n}`)
             node.prepend(title)
+        } else if (type === 'edition' && subtype === 'transliteration') {
+            const title = document.createElement('span')
+            title.className += ' section-heading';
+            title.append(`Transliteration`)
+            node.prepend(title)
         }
     },
     'ab': node => {
