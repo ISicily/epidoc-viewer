@@ -15,12 +15,11 @@ const useStyles = makeStyles({
   },
 });
 
-export default function LeidenPopup({title, body, open, handleClose}) {
+export default function LeidenPopup({body, open, handleClose}) {
   const classes = useStyles();
 
   return (
     <Dialog aria-labelledby="simple-dialog-title" open={open} onClose={handleClose}>
-      <DialogTitle id="simple-dialog-title">{title}</DialogTitle>
       <DialogContent>
           <DialogContentText id="alert-dialog-description">
             {body}

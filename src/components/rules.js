@@ -16,9 +16,10 @@ const addSingleSpaceSpan = (node) => {
 }
 
 
-function underlineIfUndefined(node) {
+function underlineIfPreviousEditor(node) {
     const evidence = node.getAttribute("evidence");
-    if (evidence && evidence.toLowerCase() === 'previouseditor' && node.getAttribute('reason') === 'undefined') {
+    // && node.getAttribute('reason') === 'undefined'
+    if (evidence && evidence.toLowerCase() === 'previouseditor' ) {
         const underlineSpan = document.createElement('span');
         underlineSpan.className = 'underline';
         [...node.childNodes].forEach(child => underlineSpan.appendChild(child));
@@ -57,37 +58,26 @@ const mergeAdjacentSupplied = (node, tw) => {
     const reason = node.getAttribute('reason')
     let lastVisitedSupplied = node;
     addOpeningBracket(reason, node);
-    underlineIfUndefined(node)
+    underlineIfPreviousEditor(node)
     if (isUncertain) node.append('(?)')
     let descendants = getDescendants( node )
     let currentNode = tw.nextNode()
     while(currentNode) {
          if (descendants.includes(currentNode)) {
             // skip all descendants of 'supplied'
-            currentNode = tw.nextNode()
-        } else if ((currentNode.nodeType === Node.TEXT_NODE && currentNode.nodeValue.trim().length) ||
-                        ( currentNode.nodeType === Node.ELEMENT_NODE 
-                            && ['lb', 'ab', 'cb', 'div'].includes(currentNode.nodeName))) {
-            // text node with actual text (not just whitespace) so we are done
-            // *** HERE IS WHERE I COULD CLOSE A BRACKET BEFORE A LINE BREAK, AND THEN REOPEN JUST AFTER THE LB?
-            // BASICALLY JUST PREPEND CLOSING, AND APPEND OPENING.
-            // I'D HAVE TO MOVE THE CHECK FOR LB, ETC. INTO A NEW ELSE-IF
-            // Actually no, because I have to be careful not to combine across breaks.  the only case is when there is a supplied 
-            // that crosses the break.  Which I guess I catch by checking for a break within the children of the
-            // 'supplied'.  so, TODO:  add a check in the descendants for a break, and if there, add an
+            // POSSIBLE TODO:  add a check for breaks (lb ab cb) in descendants, and if there, add an
             // opening bracket before, and a closing bracket after.
-            currentNode = null
-        } else if (currentNode.nodeType === Node.ELEMENT_NODE 
-            && currentNode.nodeName === 'supplied' 
-            && currentNode.getAttribute('reason') !== reason) {
-            // we've hit another 'supplied' but with a different reason, so we are done
-            currentNode = null    
+            currentNode = tw.nextNode()
+        } else if (isInterveningText(currentNode) ||
+                isBreak(currentNode) ||
+                isSuppliedWithDifferentReason(currentNode, reason)) {
+                    currentNode = null    // we are done
         } else if (currentNode.nodeType === Node.ELEMENT_NODE && currentNode.nodeName === 'supplied') {
             // we've found another adjacent supplied
-            underlineIfUndefined(currentNode);
+            underlineIfPreviousEditor(currentNode);
             lastVisitedSupplied = currentNode;
             if (currentNode.getAttribute('cert') === "low") currentNode.append('(?)')
-            currentNode.setAttribute('leiden-processed', 'true')  // this is so we don't apply our rule to this 'suuplied' later
+            currentNode.setAttribute('leiden-processed', 'true')  // this is so we don't apply our rule to this 'supplied' later
             descendants = getDescendants(currentNode) // now ignore the descendants of this 'supplied' node 
             currentNode = tw.nextNode()  
         } else {
@@ -96,10 +86,25 @@ const mergeAdjacentSupplied = (node, tw) => {
         }         
     }
     // need to append the end bracket here if we've reached the end of the elements, 
-        // without having hit a text node earlier
-        addClosingBracket(reason, lastVisitedSupplied); 
+    // without having hit a text node earlier
+    addClosingBracket(reason, lastVisitedSupplied); 
     // reset tree walker back to original node
     tw.currentNode = node
+}
+
+function isSuppliedWithDifferentReason(currentNode, firstReason) {
+    return currentNode.nodeType === Node.ELEMENT_NODE
+        && currentNode.nodeName === 'supplied'
+        && currentNode.getAttribute('reason') !== firstReason;
+}
+
+function isBreak(currentNode) {
+    return (currentNode.nodeType === Node.ELEMENT_NODE
+        && ['lb', 'ab', 'cb', 'div'].includes(currentNode.nodeName));
+}
+
+function isInterveningText(currentNode) {
+    return (currentNode.nodeType === Node.TEXT_NODE && currentNode.nodeValue.trim().length);
 }
 
 function processHi(node) {
@@ -156,13 +161,12 @@ const hyperlinkNode = node => {
     }
 }
 
-const makePopupable = (subNode, node, title, openPopup) => {
+const makePopupable = (node, popupText, openPopup) => {
     const sup = document.createElement('sup')
     // lighter arrow: \u2197   darker arrow: \u2B08
     sup.append('[\u2197]')
     const span = document.createElement('span')
-    span.addEventListener("click", ()=>openPopup(title, subNode.textContent))
-    subNode.parentNode.removeChild(subNode);
+    span.addEventListener("click", ()=>openPopup(popupText));
     // copy the nodes children to the new span
     [...node.childNodes].forEach(child => span.appendChild(child));
     span.appendChild(sup)
@@ -199,8 +203,24 @@ const rules = {
          if (del) {
              const rend = del.getAttribute('rend')
              if (rend === 'corrected') {
-                makePopupable(del, node, 'del', openPopup)
+                const popupText = `Deleted: ${del.textContent}`
+                del.parentNode.removeChild(del);  
+                makePopupable(node, popupText, openPopup)
              }
+        }
+    },
+    'num': (node, tw, openPopup ) => {
+        const value = node.getAttribute('value')
+        const atLeast = node.getAttribute('atLeast')
+        const atMost = node.getAttribute('atMost')
+        let popupText;
+        if (value) {
+            popupText = value
+        } else if (atLeast && atMost) {
+            popupText = `${atLeast}-${atMost}`
+        }
+        if (popupText) {
+            makePopupable(node, popupText, openPopup)
         }
     },
     'add': node => {
@@ -227,16 +247,12 @@ const rules = {
     },
     'g': appendSpaceToNode,
    // 'name': appendSpaceToNode,
-  //  'num': appendSpaceToNode,
     'placename': hyperlinkNode,
     'persname': hyperlinkNode,
     'supplied': (node, tw) => {
         // ignore 'supplied' that we merged into a prior 'supplied'
         if (node.getAttribute('leiden-processed') === 'true') return null
         mergeAdjacentSupplied(node, tw)
-    },
-    'unclear': node => {
-        node.textContent = node.textContent.split('').map(character => character + '\u0323').join('').trim();
     },
     'hi': node => {
 
@@ -246,9 +262,13 @@ const rules = {
         const reg = node.querySelector('reg')
         const corr = node.querySelector('corr')
         if (reg) {
-            makePopupable(reg, node, 'reg', openPopup)
+            const popupText = `Regularized: ${reg.textContent}`
+            reg.parentNode.removeChild(reg);  
+            makePopupable(node, popupText, openPopup)
         } else if (corr) {
-            makePopupable(corr, node, 'Correction', openPopup)
+            const popupText = `Corrected: ${corr.textContent}`
+            corr.parentNode.removeChild(corr);  
+            makePopupable(node, popupText, openPopup)
         }
     },
     ...sharedRules(true)

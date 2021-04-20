@@ -45,7 +45,11 @@ const sharedRules = (isInterpreted) => {
                 textIndicator = '→'
             } else if (style === "text-direction:spiral-clockwise") {
                 textIndicator = '↻'
+            } else if (style === "text-direction:circular-clockwise") {
+                textIndicator = '↻'
             } else if (style === "text-direction:spiral-anticlockwise") {
+                textIndicator = '↺'
+            } else if (style === "text-direction:circular-anticlockwise") {
                 textIndicator = '↺'
             } else if (style === "text-direction:upwards") {
                 textIndicator = '↑'
@@ -84,7 +88,7 @@ const sharedRules = (isInterpreted) => {
             const reason = node.getAttribute('reason');  // 'lost' 'illegible' 'omitted'
             const extent = node.getAttribute('extent');  // always 'unknown' if present?  - never in combination with quantity or atLeast/atMost
             const quantity = node.getAttribute('quantity'); // not in combination with extent or atLeast/atMost
-            const unit = node.getAttribute('unit');  // character or line
+            const unit = node.getAttribute('unit');  // character, line, or some other unit like cm
             const atLeast = node.getAttribute('atLeast');  // not in combination with extent or quantity
             const atMost = node.getAttribute('atMost');     // not in combination with extent or quantity
             const precision = node.getAttribute('precision');  // 'low' output: ca. 
@@ -100,6 +104,8 @@ const sharedRules = (isInterpreted) => {
                         closingDelimiter = ']  '
                     }
                 } else {
+                    // Dots are used only when exact number of characters is known.
+                    // Dashes otherwise.
                     elementText = '[';
                     if (extent === 'unknown') {
                         elementText += '- - ? - -';
@@ -108,8 +114,9 @@ const sharedRules = (isInterpreted) => {
                     } else if (quantity && quantity < 5) {
                         elementText += '. '.repeat(quantity).trim();
                     } else if (quantity && quantity >= 5) {
-                        if (precision === 'low') {
-                            elementText += `- - ${precisionOutput}${quantity} - - `
+                        if (precision === 'low' || (unit !== 'character' && unit !== 'line')) {
+                            // note that we display the unit if it isn't 'character' or 'line' because it is likely 'cm'
+                            elementText += `- - ${precisionOutput}${quantity}${(unit !== 'character' && unit !== 'line')?unit:''} - - `
                         } else {
                             elementText += `. . ${quantity} . . `
                         } 
@@ -136,7 +143,21 @@ const sharedRules = (isInterpreted) => {
             }
             node.prepend(elementText);
             node.append(closingDelimiter)
+        },'unclear': (node) => {
+            //&#x30A; is equivalent to U+030A and \u030A
+            const combiningChar = isLatinSpecifiedInAncestor(node)?'\u030A':'\u0323'
+            node.textContent = node.textContent.split('').map(character => character + combiningChar).join('').trim();
         }
+    }
+}
+
+const isLatinSpecifiedInAncestor = (node) => {
+    if (! node) {
+        return false
+    } else if (node.getAttribute('xml:lang') === 'xpu-Latn') {
+        return true
+    }  else {
+        return isLatinSpecifiedInAncestor(node.parentNode);
     }
 }
 
