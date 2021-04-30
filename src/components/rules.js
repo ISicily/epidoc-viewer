@@ -65,7 +65,7 @@ const mergeAdjacentSupplied = (node, tw) => {
     while(currentNode) {
          if (descendants.includes(currentNode)) {
             // skip all descendants of 'supplied'
-            // POSSIBLE TODO:  add a check for breaks (lb ab cb) in descendants, and if there, add an
+            // POSSIBLE TODO:  check for breaks (lb ab cb) in descendants, and if there, add an
             // opening bracket before, and a closing bracket after.
             currentNode = tw.nextNode()
         } else if (isInterveningText(currentNode) ||
@@ -164,7 +164,7 @@ const hyperlinkNode = node => {
 const makePopupable = (node, popupText, openPopup) => {
     const sup = document.createElement('sup')
     // lighter arrow: \u2197   darker arrow: \u2B08
-    sup.append('[\u2197]')
+    sup.append('⦗\u2197⦘')
     const span = document.createElement('span')
     span.addEventListener("click", ()=>openPopup(popupText));
     // copy the nodes children to the new span
