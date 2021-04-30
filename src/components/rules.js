@@ -15,16 +15,11 @@ const addSingleSpaceSpan = (node) => {
     node.appendChild(whitespaceElem)
 }
 
-
-function underlineIfPreviousEditor(node) {
-    const evidence = node.getAttribute("evidence");
-    // && node.getAttribute('reason') === 'undefined'
-    if (evidence && evidence.toLowerCase() === 'previouseditor' ) {
-        const underlineSpan = document.createElement('span');
-        underlineSpan.className = 'underline';
-        [...node.childNodes].forEach(child => underlineSpan.appendChild(child));
-        node.appendChild(underlineSpan);
-    }
+function underline(node) {
+    const underlineSpan = document.createElement('span');
+    underlineSpan.className = 'underline';
+    [...node.childNodes].forEach(child => underlineSpan.appendChild(child));
+    node.appendChild(underlineSpan);
 }
 
 function addOpeningBracket(reason, node) {
@@ -58,7 +53,6 @@ const mergeAdjacentSupplied = (node, tw) => {
     const reason = node.getAttribute('reason')
     let lastVisitedSupplied = node;
     addOpeningBracket(reason, node);
-    underlineIfPreviousEditor(node)
     if (isUncertain) node.append('(?)')
     let descendants = getDescendants( node )
     let currentNode = tw.nextNode()
@@ -70,11 +64,10 @@ const mergeAdjacentSupplied = (node, tw) => {
             currentNode = tw.nextNode()
         } else if (isInterveningText(currentNode) ||
                 isBreak(currentNode) ||
-                isSuppliedWithDifferentReason(currentNode, reason)) {
+                isNotElidableSupplied(currentNode, reason)) {
                     currentNode = null    // we are done
         } else if (currentNode.nodeType === Node.ELEMENT_NODE && currentNode.nodeName === 'supplied') {
             // we've found another adjacent supplied
-            underlineIfPreviousEditor(currentNode);
             lastVisitedSupplied = currentNode;
             if (currentNode.getAttribute('cert') === "low") currentNode.append('(?)')
             currentNode.setAttribute('leiden-processed', 'true')  // this is so we don't apply our rule to this 'supplied' later
@@ -92,10 +85,11 @@ const mergeAdjacentSupplied = (node, tw) => {
     tw.currentNode = node
 }
 
-function isSuppliedWithDifferentReason(currentNode, firstReason) {
+function isNotElidableSupplied(currentNode, firstReason) {
     return currentNode.nodeType === Node.ELEMENT_NODE
         && currentNode.nodeName === 'supplied'
-        && currentNode.getAttribute('reason') !== firstReason;
+        && ( (currentNode.getAttribute('reason') !== firstReason) || 
+        (currentNode.getAttribute('evidence') === 'previouseditor'))
 }
 
 function isBreak(currentNode) {
@@ -252,7 +246,12 @@ const rules = {
     'supplied': (node, tw) => {
         // ignore 'supplied' that we merged into a prior 'supplied'
         if (node.getAttribute('leiden-processed') === 'true') return null
-        mergeAdjacentSupplied(node, tw)
+        if (node.getAttribute('evidence') === 'previouseditor') {
+            // simply underline if previouseditor, no square brackets
+            underline(node)
+        } else {
+            mergeAdjacentSupplied(node, tw)
+        }
     },
     'hi': node => {
 
