@@ -8,6 +8,11 @@ function normalizeText(text) {
     return text.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 }
 
+function isBreak(node) {
+    return (node.nodeType === Node.ELEMENT_NODE
+        && ['lb', 'ab', 'cb', 'div'].includes(node.nodeName));
+}
+
 const convert = (tei, openPopup, showInterpreted) => { 
     // openPopup takes two args:  title, body
     let fixedTEI = tei.replace(/[\r\n\t]/g, "")
@@ -70,7 +75,7 @@ const convert = (tei, openPopup, showInterpreted) => {
                 nextBracketToMatch = '<'
                 nodeWithLastBracketMatched = tw.currentNode
             }
-        }
+        } 
     }
 
     return parent

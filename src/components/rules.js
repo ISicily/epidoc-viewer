@@ -174,6 +174,14 @@ const appendSpaceToNode = (node, tw) => {
 
 
 const rules = {
+    'w': node => {
+        if (node.getAttribute('part') === 'I') {
+            const exChild = node.querySelector('ex')
+            if (exChild) {
+                exChild.append('-')
+            }
+        } 
+    },
     'ex': node => {
         const cert = node.getAttribute('cert')
         node.prepend('('); 
@@ -191,6 +199,18 @@ const rules = {
         if (rend ==="erasure") {
             node.prepend('⟦'); node.append('⟧')
         } 
+    },
+    'handShift': (node) => {
+        const newAttribute = node.getAttribute('new');
+        const n = newAttribute.lastIndexOf('h');
+        let handNumber = ''
+        if (n) {
+            let number = newAttribute.substring(n + 1);
+            if (number) {
+                handNumber = ' ' + number
+            }
+        }
+        node.textContent = `((hand${handNumber}))`
     },
     'subst': (node, tw, openPopup ) => {
         const del = node.querySelector('del')

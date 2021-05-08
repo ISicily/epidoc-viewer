@@ -14,6 +14,20 @@ const removeAllChildNodes = (parent) => {
         parent.removeChild(parent.firstChild);
     }
 }
+
+const splitAround = (root, splittingElement) => {
+    // divide the tree starting at root to the left and right of splittingElement
+    // from https://stackoverflow.com/questions/27497718/splitting-node-content-in-javascript-dom
+    for (var parent = splittingElement.parentNode; root != parent; parent = grandparent) {
+        var right = parent.cloneNode(false);
+        while (splittingElement.nextSibling)
+            right.appendChild(splittingElement.nextSibling);
+        var grandparent = parent.parentNode;
+        grandparent.insertBefore(right, parent.nextSibling);
+        grandparent.insertBefore(splittingElement, right);
+    }
+}
+
 const findNextAdjacentSupplied = (tw)=> {
    // let priorNode = tw.currentNode;
     let result = null;
@@ -30,23 +44,28 @@ const findNextAdjacentSupplied = (tw)=> {
     return result;   // return supplied node if any
 }
 
-const getTextFromSuppliedAndAdjacentSupplieds = (node, tw) => {
+const getTextFromSuppliedAndAdjacentSupplieds = (suppliedNode, tw) => {
+    const containedLineBreak = suppliedNode.querySelector('lb')
+    if (containedLineBreak) {
+        // split the supplied in two and then continue
+        splitAround(suppliedNode.parentNode, containedLineBreak)
+    }
     let suppliedText = ''
-    const reason = node.getAttribute('reason');
+    const reason = suppliedNode.getAttribute('reason');
     if (reason === 'omitted' || reason === 'subaudible') {
-        node.textContent = ''  // ignore these supplied elements
+        suppliedNode.textContent = ''  // ignore these supplied elements
     } else {
         // remove any supplied expansions of abbreviations
-        node.querySelectorAll('ex').forEach(exNode=>exNode.textContent = '')
-        if (node.nodeName === 'supplied') {
-            suppliedText = node.textContent
-        } else if (node.nodeName === 'gap') {
-            let quantity = node.getAttribute('quantity');
+        suppliedNode.querySelectorAll('ex').forEach(exNode=>exNode.textContent = '')
+        if (suppliedNode.nodeName === 'supplied') {
+            suppliedText = suppliedNode.textContent.trim()
+        } else if (suppliedNode.nodeName === 'gap') {
+            let quantity = suppliedNode.getAttribute('quantity');
             if (quantity && ! isNaN(quantity)) {
                 suppliedText = 'X'.repeat(parseInt(quantity))
             }
         }
-        removeAllChildNodes(node)
+        removeAllChildNodes(suppliedNode)
         let adjacentSupplied = findNextAdjacentSupplied(tw);  // see if there is an adjacent supplied
         if (adjacentSupplied) {
             suppliedText = suppliedText + getTextFromSuppliedAndAdjacentSupplieds(adjacentSupplied, tw);
@@ -59,6 +78,7 @@ const getTextFromSuppliedAndAdjacentSupplieds = (node, tw) => {
 
 const diplomaticRules = {
     'supplied': (node, tw) => {
+        
         const finalText = getTextFromSuppliedAndAdjacentSupplieds(node, tw)
         if (! finalText) {
             node.textContent = ''
