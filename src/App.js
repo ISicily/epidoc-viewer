@@ -4,10 +4,9 @@ import React, {useState, useEffect} from 'react';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { Paper, TextField, Box, Grid } from '@material-ui/core';
-import sampleTEI from './sampleData/sampleTEI'
 import { makeStyles } from '@material-ui/core/styles';
 
-import LeidenViewer from './components/LeidenViewer'
+import {LeidenViewer} from '@isicily/epidoc-viewer-core'
 
 import InterpretedToggle from './components/InterpretedToggle'
 
@@ -35,6 +34,8 @@ function App() {
   const [tei, setTei] = useState()
 
   const [showInterpreted, setShowInterpreted] = React.useState(true);
+
+  const overridingRules = {} // here is where someone could add their own rules or override existing rules
     
   const handleChange = (event) => {
     setShowInterpreted(event.target.checked);
