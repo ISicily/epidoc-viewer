@@ -53,7 +53,7 @@ function App() {
     <Container maxWidth={false} className="App">
        <Box m={2}><img src={logo} alt="logo" height={100}/></Box>
         <Typography variant="h4" component="h1" gutterBottom>
-          I.Sicily EpiDoc Viewer
+        CSAD EpiDoc Viewer
         </Typography>
 
       <Grid container spacing={3}>

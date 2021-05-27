@@ -1,8 +1,13 @@
 {
   "name": "epidoc-viewer",
   "version": "0.1.0",
+<<<<<<< master
   "private": false,
   "homepage": "https://isicily.github.io/epidoc-viewer",
+=======
+  "private": true,
+  "homepage": "https://jchartrand.github.io/epidoc-viewer",
+>>>>>>> master
   "dependencies": {
     "@isicily/epidoc-viewer-core": "^1.0.3",
     "@material-ui/core": "^4.11.2",
