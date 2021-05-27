@@ -16,25 +16,111 @@ and includes exemplars of the conversion rules.
 
 Convert your own epidoc by replacing what's in the 'epidoc' panel with your own epidoc.  You must paste at least a `div[type="edition"]` but can also paste the entire TEI Doc if you like.  The converter will (more-or-less) instantly generate equivalent Leiden in the 'leiden' panel.  Any change you make in the epidoc panel will update the Leiden.
 
-You can also fork this repository if you'd like to tweak the epidoc to leiden rules.  There are two sets of rules:
+## Customize
 
-[Interpreted](https://github.com/ISicily/epidoc-viewer/blob/master/src/components/rules.js)
+You can fork this repository if you'd like to tweak the epidoc to leiden rules or otherwise modify the interface (title, logo).
 
-[Diplomatic](https://github.com/ISicily/epidoc-viewer/blob/master/src/components/diplomaticRules.js)
+### General Customization
+
+#### Fork the repo
+
+<img width="956" alt="image" src="https://user-images.githubusercontent.com/547165/119873024-16464880-bef2-11eb-8c25-dfac09060213.png">
+
+#### Clone your fork to your computer
+
+in a terminal:
+
+```git clone git@github.com:jchartrand/epidoc-viewer.git```
+
+#### Install Dependencies
+
+```npm install``` 
+
+OR 
+
+```yarn install```
+
+Now Change what you’d like in the web app, e.g., title, image, layout.
+
+You can see the effect by running a dev server with:
+
+```npm run start```
+OR
+```yarn run start``` 
+
+#### Deploy
+
+You can deploy to your own server by running:
+
+```npm run build```
+OR
+```yarn run build``` 
+
+and then copy the contents of the build directory to whichever directory is appropriate on your server.
+
+You can also deploy to Github Pages on your forked server (as we do for this repository).
+
+Run the ‘npm run deploy’ or ‘yarn run deploy’ if you want to run on Github pages.  You'll have to  make sure that the homepage in package.json is set to the github pages url for your fork, e.g.
+
+```"homepage": "https://jchartrand.github.io/epidoc-viewer",```
+
+You will also have to enable Github pages in the settings of your repo (Settings/pages).
+
+#### Updating core files
+
+To update the core epidoc-viewer-core files (if there is a new release, say if the default rules change), run 
+
+```yarn upgrade @isicily/epidoc-viewer-core --latest```
+OR
+```npm install @isicily/epidoc-viewer-core@latest```
+
+Then run the build and copy your files to your server, or deploy to GitHub pages.
+
+### Adding rules or overriding rules
+
+  There are two sets of rules, which are actually defined in the core repo on which this repo depends (although you shouldn't have to change that core repo:
+
+[Interpreted](https://github.com/ISicily/epidoc-viewer-core/blob/master/src/rules.js)
+
+[Diplomatic](https://github.com/ISicily/epidoc-viewer-core/blob/master/src/diplomaticRules.js)
+
+And an associated CSS stylesheet [https://github.com/ISicily/epidoc-viewer-core/blob/master/src/Leiden.css](https://github.com/ISicily/epidoc-viewer-core/blob/master/src/Leiden.css)
+
+To override or add, create a rules object like those defined above, but only include rules for those tags you wish to add or override, e.g.,
+
+```javascript
+const yourRules = {
+    'w': node => {
+        if (node.getAttribute('part') === 'I') {
+            const exChild = node.querySelector('ex')
+            if (exChild) {
+                exChild.append('-')
+            }
+        } 
+    },
+    'ex': node => {
+        const cert = node.getAttribute('cert')
+        node.prepend('('); 
+        if (cert === 'low') node.append('?')
+        node.append(')')
+    },
+    'abbr': node => {
+        if (node.parentNode.nodeName !== 'expan') node.append('(- - -)')
+    }
+}
+```
+
+and then pass those rules into the LeidenViewer component as a prop:
+
+```<LeidenViewer tei={tei} showInterpreted={showInterpreted} overridingRules={yourRules}/>```
 
 The conversion uses a [TreeWalker](https://developer.mozilla.org/en-US/docs/Web/API/TreeWalker) to walk through the epidoc XML tree in document order, applying rules to the elements as it goes.
 
-There is also an associated CSS stylesheet [https://github.com/ISicily/epidoc-viewer/blob/master/src/components/Leiden.css](https://github.com/ISicily/epidoc-viewer/blob/master/src/components/Leiden.css)
+We render the viewer with React, but the underlying rules and their application are pure javascript/css.  Use them in any javascript project - the bits you need are comfortably ensconsed within [https://github.com/ISicily/epidoc-viewer-core](https://github.com/ISicily/epidoc-viewer-core) which also has an NPM package [https://www.npmjs.com/package/@isicily/epidoc-viewer-core](https://www.npmjs.com/package/@isicily/epidoc-viewer-core)
 
-We render the viewer with React, but the underlying rules and their application are pure javascript/css.  Use them in any javascript project - the bits you need are comfortably ensconsed within:
 
-(https://github.com/ISicily/epidoc-viewer/blob/master/src/components/convert.js)[https://github.com/ISicily/epidoc-viewer/blob/master/src/components/convert.js]
 
-and
 
-https://github.com/ISicily/epidoc-viewer/blob/master/src/components/Leiden.css](https://github.com/ISicily/epidoc-viewer/blob/master/src/components/Leiden.css)
-
-We may at some point extract this to an NPM module - let us know if that would be useful for your project.  We might also extract a React component to NPM if that would be useful.
 
 # Getting Started with Create React App
 
@@ -81,28 +167,4 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
