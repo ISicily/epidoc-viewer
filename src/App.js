@@ -1,4 +1,6 @@
-import logo from './Oxford-University-rectangle-logo.png';
+import ERClogo from './LOGO_ERC-FLAG_EU_cropped.jpg';
+import isicilyLogo from './ISicily_english_reduced.jpg';
+import oxfordLogo from './2258_ox_brand_blue_pos_rect.png' 
 import './App.css';
 import React, {useState, useEffect} from 'react';
 import Container from '@material-ui/core/Container';
@@ -25,6 +27,9 @@ const useStyles = makeStyles({
     maxHeight: '40px', 
     minWidth: '100px', 
     minHeight: '40px'
+  },
+  titleBox: {
+    paddingTop:'1em'
   }
 });
 
@@ -50,12 +55,19 @@ function App() {
   const classes = useStyles();
 
   return (
-    <Container maxWidth={false} className="App">
-       <Box m={2}><img src={logo} alt="logo" height={100}/></Box>
-        <Typography variant="h4" component="h1" gutterBottom>
+    <Container maxWidth={false} className="App"><Grid container spacing={1} className={classes.titleBox} >
+    
+    <Box display="flex"
+          height={100}
+          m="auto"
+          alignItems="center">
+      <img src={isicilyLogo} alt="logo" height={100}/>
+      <Typography variant="h4" component="h1" style={{marginLeft:"2em"}}>
         I.Sicily EpiDoc Viewer
-        </Typography>
-
+      </Typography>
+    </Box>
+   
+</Grid>
       <Grid container spacing={3}>
         <Grid item xs={6} >
           <Paper>
@@ -90,6 +102,34 @@ function App() {
           </Paper>
         </Grid>
       </Grid>
+
+      <Grid container spacing={2} className={classes.titleBox} >
+              <Grid item xs={3} >
+                <Box display="flex" 
+                height={100}
+                alignItems="center"
+                justifyContent="center">
+                  <img src={ERClogo} alt="logo" height={100}/>
+                </Box>
+              </Grid>
+              <Grid item xs={5} >
+                <Box m={1}>
+                  <Typography variant="body2">
+                  This project has received funding from the John Fell Fund of the University of Oxford, and from the European Research Council (ERC) under the European Union’s Horizon 2020 research and innovation programme (grant agreement No 885040, “Crossreads”).
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid item xs={4} >
+                <Box 
+                display="flex" 
+                height={100}
+                alignItems="center"
+                justifyContent="center">
+                  <img src={oxfordLogo} alt="logo" height={80}/>
+                </Box>
+              </Grid>
+      </Grid>
+
 
     </Container>
   );
