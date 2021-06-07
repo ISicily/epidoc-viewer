@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/epidoc-viewer/static/css/main.24a267fe.chunk.css",
-    "main.js": "/epidoc-viewer/static/js/main.52d6c8a8.chunk.js",
-    "main.js.map": "/epidoc-viewer/static/js/main.52d6c8a8.chunk.js.map",
+    "main.js": "/epidoc-viewer/static/js/main.1df34655.chunk.js",
+    "main.js.map": "/epidoc-viewer/static/js/main.1df34655.chunk.js.map",
     "runtime-main.js": "/epidoc-viewer/static/js/runtime-main.a1fe0f0a.js",
     "runtime-main.js.map": "/epidoc-viewer/static/js/runtime-main.a1fe0f0a.js.map",
-    "static/js/2.75c191ad.chunk.js": "/epidoc-viewer/static/js/2.75c191ad.chunk.js",
-    "static/js/2.75c191ad.chunk.js.map": "/epidoc-viewer/static/js/2.75c191ad.chunk.js.map",
+    "static/js/2.fedb28f7.chunk.js": "/epidoc-viewer/static/js/2.fedb28f7.chunk.js",
+    "static/js/2.fedb28f7.chunk.js.map": "/epidoc-viewer/static/js/2.fedb28f7.chunk.js.map",
     "static/js/3.360f35e5.chunk.js": "/epidoc-viewer/static/js/3.360f35e5.chunk.js",
     "static/js/3.360f35e5.chunk.js.map": "/epidoc-viewer/static/js/3.360f35e5.chunk.js.map",
     "index.html": "/epidoc-viewer/index.html",
     "static/css/main.24a267fe.chunk.css.map": "/epidoc-viewer/static/css/main.24a267fe.chunk.css.map",
-    "static/js/2.75c191ad.chunk.js.LICENSE.txt": "/epidoc-viewer/static/js/2.75c191ad.chunk.js.LICENSE.txt",
+    "static/js/2.fedb28f7.chunk.js.LICENSE.txt": "/epidoc-viewer/static/js/2.fedb28f7.chunk.js.LICENSE.txt",
     "static/media/2258_ox_brand_blue_pos_rect.595ca68d.png": "/epidoc-viewer/static/media/2258_ox_brand_blue_pos_rect.595ca68d.png",
     "static/media/ISicily_english_reduced.98bb9d6f.jpg": "/epidoc-viewer/static/media/ISicily_english_reduced.98bb9d6f.jpg",
     "static/media/LOGO_ERC-FLAG_EU_cropped.416e9369.jpg": "/epidoc-viewer/static/media/LOGO_ERC-FLAG_EU_cropped.416e9369.jpg",
@@ -19,8 +19,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.a1fe0f0a.js",
-    "static/js/2.75c191ad.chunk.js",
+    "static/js/2.fedb28f7.chunk.js",
     "static/css/main.24a267fe.chunk.css",
-    "static/js/main.52d6c8a8.chunk.js"
+    "static/js/main.1df34655.chunk.js"
   ]
 }
