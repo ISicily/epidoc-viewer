@@ -60,11 +60,15 @@ function App() {
     <Box display="flex"
           height={100}
           m="auto"
+          style={{marginTop:"2em", marginBottom:"1.5em"}}
           alignItems="center">
-      <img src={isicilyLogo} alt="logo" height={100}/>
-      <Typography variant="h4" component="h1" style={{marginLeft:"2em"}}>
-        I.Sicily EpiDoc Viewer
-      </Typography>
+      <a href="http://sicily.classics.ox.ac.uk"><img src={isicilyLogo} alt="logo" height={100}/></a>
+      <Box style={{marginLeft:"3em"}}>
+        <Typography variant="h4" component="h1" >
+          I.Sicily EpiDoc Viewer
+        </Typography>
+        <Typography><div><a href="https://github.com/ISicily/epidoc-viewer">(https://github.com/ISicily/epidoc-viewer)</a></div></Typography>
+      </Box>
     </Box>
    
 </Grid>
@@ -109,7 +113,7 @@ function App() {
                 height={100}
                 alignItems="center"
                 justifyContent="center">
-                  <img src={ERClogo} alt="logo" height={100}/>
+                  <a href="https://erc.europa.eu"><img src={ERClogo} alt="logo" height={100}/></a>
                 </Box>
               </Grid>
               <Grid item xs={5} >
@@ -125,7 +129,7 @@ function App() {
                 height={100}
                 alignItems="center"
                 justifyContent="center">
-                  <img src={oxfordLogo} alt="logo" height={80}/>
+                  <a href="https://www.ox.ac.uk"><img src={oxfordLogo} alt="logo" height={80}/></a>
                 </Box>
               </Grid>
       </Grid>
