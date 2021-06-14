@@ -1,14 +1,12 @@
-<img align="left" src="src/2256_ox_brand_blue_pos.png?raw=true" alt="alt text" width="200" >
-<img align="center" src="src/ISicily_english_reduced.jpg?raw=true" alt="alt text" width="200" >
-<img align="right" src="src/LOGO_ERC-FLAG_EU_cropped.jpg?raw=true" alt="alt text" width="200" >
+<img align="left" src="src/2258_ox_brand_blue_pos_rect.png?raw=true" alt="oxford logo" width="200" >
+<img align="center" src="src/ISicily_english_reduced.jpg?raw=true" alt="isicily logo" width="200" >
+<img align="right" src="src/LOGO_ERC-FLAG_EU_cropped.jpg?raw=true" alt="erc logo" width="200" >
 
 <br clear="both"/>
 
 # I.Sicily EpiDoc Viewer
 
 <div>This project has received funding from the John Fell Fund of the University of Oxford, and from the European Research Council (ERC) under the European Union’s Horizon 2020 research and innovation programme (grant agreement No 885040, “Crossreads”).</div>
-
-
 
 Transforms EpiDoc into a conventional set of editorial mark-up, based upon the Leiden conventions in epigraphic studies.
 
