@@ -1,6 +1,5 @@
-
-<img align="left" src="src/ISicily_english_reduced.jpg?raw=true" alt="alt text" width="200" >
-<img align="right" src="src/2256_ox_brand_blue_pos.png?raw=true" alt="alt text" width="200" >
+<img align="left" src="src/2256_ox_brand_blue_pos.png?raw=true" alt="alt text" width="200" >
+<img align="center" src="src/ISicily_english_reduced.jpg?raw=true" alt="alt text" width="200" >
 <img align="right" src="src/LOGO_ERC-FLAG_EU_cropped.jpg?raw=true" alt="alt text" width="200" >
 
 <br clear="both"/>
