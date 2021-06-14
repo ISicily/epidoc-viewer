@@ -1,6 +1,6 @@
-<img align="left" src="src/2258_ox_brand_blue_pos_rect.png?raw=true" alt="oxford logo" height="200" >
-<img align="center" src="src/ISicily_english_reduced.jpg?raw=true" alt="isicily logo" height="200" >
-<img align="right" src="src/LOGO_ERC-FLAG_EU_cropped.jpg?raw=true" alt="erc logo" height="200" >
+<img align="left" src="src/2258_ox_brand_blue_pos_rect.png?raw=true" alt="oxford logo" height="80" >
+<img align="center" src="src/ISicily_english_reduced.jpg?raw=true" alt="isicily logo" height=80" >
+<img align="right" src="src/LOGO_ERC-FLAG_EU_cropped.jpg?raw=true" alt="erc logo" height=80" >
 
 <br clear="both"/>
 
