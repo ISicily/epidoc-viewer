@@ -5,6 +5,11 @@
 </div>
 <br clear="both"/>
 
+<br/>
+
+[![DOI](https://zenodo.org/badge/329387382.svg)](https://zenodo.org/badge/latestdoi/329387382)
+
+
 # I.Sicily EpiDoc Viewer
 
 <div>This project has received funding from the John Fell Fund of the University of Oxford, and from the European Research Council (ERC) under the European Union’s Horizon 2020 research and innovation programme (grant agreement No 885040, “Crossreads”).</div>
